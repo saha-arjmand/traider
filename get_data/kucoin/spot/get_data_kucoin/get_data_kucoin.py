@@ -1,17 +1,18 @@
 import traider.utils.time.time as timeutc
+from traider.get_data.kucoin.spot.url import CreateUrl
 import requests
 
-print(timeutc.current_utc_time)
 
-def URL(secondTime,firstTime,symbol,TimeFrame):
-    # URL for CandleStick Kucoin API
-    url = f"https://api.kucoin.com/api/v1/market/candles?symbol={symbol}&type={TimeFrame}&startAt={firstTime}&endAt={secondTime}"
-    return url
 
 # Get Data From API
-first_time = timeutc.firstTime
-second_time = timeutc.lastTime
-url = URL(second_time,first_time,"BTC-USDT","1min")
-response = requests.get(url=url).text
+class OneMinuteSpotData():
+    def singleOneMinuteData(self):
+        first_time = timeutc.firstTime
+        second_time = timeutc.lastTime
+        url = CreateUrl.URL(second_time, first_time, "BTC-USDT", "1min")
+        response = requests.get(url=url).text
+        return response
 
-print(response)
+
+candle = OneMinuteSpotData()
+print(candle.singleOneMinuteData())

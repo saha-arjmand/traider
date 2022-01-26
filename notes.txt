@@ -1,6 +1,6 @@
  کارها
  --------------------------------
-get try except to 1minSpotCandleData for too many request error
+
 به دست آوردن کندل های استاندارد 5 دقیقه و بقیه اش
 
 
@@ -14,3 +14,4 @@ get try except to 1minSpotCandleData for too many request error
 . ایجاد کد تبدیل تایم زمان حال به ثانیه در فایل آن
 . اتصال به کوکوین و گرفتن لیست کوین ها
  تبدیل به کلاس کردن کندل یک دقیقه ای تا چند کندل قبل را میخواهم
+ get try except to 1minSpotCandleData for too many request error

@@ -10,8 +10,14 @@ class OneMinuteSpotData():
         first_time = timeutc.firstTime
         second_time = timeutc.lastTime
         url = CreateUrl.URL(second_time, first_time, "BTC-USDT", "1min")
-        response = requests.get(url=url).text
-        return response
+        try:
+            response = requests.get(url=url).json()
+            return response['data'][0]
+        except:
+            while(response['code'] != 200000):
+                response = requests.get(url=url).json()
+            return response['data'][0]
+
 
 
 candle = OneMinuteSpotData()

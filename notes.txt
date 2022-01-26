@@ -1,7 +1,8 @@
  کارها
  --------------------------------
 
-. Convert column 1 of jason data to time data
+. Convert column 1 of jason data as seconds to std time data
+. Number of row of column One
 به دست آوردن کندل های استاندارد 5 دقیقه و بقیه اش
 
 
@@ -17,3 +18,4 @@
  تبدیل به کلاس کردن کندل یک دقیقه ای تا چند کندل قبل را میخواهم
 put try except to 1minSpotCandleData for too many request error
 . add MultiOneMinuteData Candle Class
+. Create Seconds to utc time function in time.py

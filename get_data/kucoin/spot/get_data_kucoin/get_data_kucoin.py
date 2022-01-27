@@ -1,6 +1,7 @@
 from traider.utils.time.time import Calculate_time
 from traider.get_data.kucoin.spot.url import CreateUrl
 import requests
+import pandas as pd
 
 
 
@@ -11,14 +12,15 @@ class OneMinuteSpotData():
         first_time = Calculate_time.firstTime
         second_time = Calculate_time.lastTime
         url = CreateUrl.URL(second_time, first_time, "BTC-USDT", "1min")
-        response = requests.get(url=url).json()
+        response = requests.get(url=url)
         try:
-            response['code'] == 200000
-            return response['data'][0]
+            if response.status_code == 200:
+                return response.json()['data'][0]
         except:
-            while(response['code'] != 200000):
-                response = requests.get(url=url).json()
-                return response['data'][0]
+            if response.status_code != 200:
+                while response.status_code == 200:
+                    response = requests.get(url=url)
+                    return response.json()['data'][0]
 
     def multi_One_Minute_Data(self,number_of_Candles):
         first_time = Calculate_time.firstTime - (number_of_Candles - 1) * 60
@@ -35,6 +37,7 @@ class OneMinuteSpotData():
 
 
 
-# candle = OneMinuteSpotData()
-# for anyItem in candle.multi_One_Minute_Data(3):
-#     print(anyItem)
+candle = OneMinuteSpotData()
+data = candle.single_One_Minute_Last_Data()
+# print(len(data))
+print(data)

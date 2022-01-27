@@ -15,12 +15,19 @@ class OneMinuteSpotData():
 
         ''' in this part of code we sure that the response from KUCOIN API get back
          if this code if we dont back status code 200 the code repeat again'''
+        timeObj = Calculate_time()
         if response.status_code == 200:
-            return response.json()['data']
+            '''this for is convert time second to standard format time'''
+            for anyItem in response.json()['data']:
+                anyItem[0] = str(timeObj.convert_second_to_utc_time(int(anyItem[0])))
+                return anyItem
         else:
             while response.status_code != 200:
                 response = requests.get(url=url)
-        return response.json()['data']
+        for anyItem in response.json()['data']:
+            anyItem[0] = str(timeObj.convert_second_to_utc_time(int(anyItem[0])))
+            return anyItem
+
 
     def multi_One_Minute_Data(self, number_of_Candles):
         first_time = Calculate_time.firstTime - (number_of_Candles - 1) * 60
@@ -30,14 +37,28 @@ class OneMinuteSpotData():
 
         ''' in this part of code we sure that the response from KUCOIN API get back
          if this code if we dont back status code 200 the code repeat again'''
+        timeObj = Calculate_time()
+        '''this for is convert time second to standard format time'''
         if response.status_code == 200:
-            return response.json()['data']
+            for anyItem in response.json()['data']:
+                anyItem[0] = str(timeObj.convert_second_to_utc_time(int(anyItem[0])))
+                print(anyItem)
         else:
             while response.status_code != 200:
                 response = requests.get(url=url)
-        return response.json()['data']
+                for anyItem in response.json()['data']:
+                    anyItem[0] = str(timeObj.convert_second_to_utc_time(int(anyItem[0])))
+                    print(anyItem)
 
 
 candle = OneMinuteSpotData()
-data = candle.single_One_Minute_Last_Data()
-print(data)
+data = candle.multi_One_Minute_Data(10)
+
+
+# candle2 = OneMinuteSpotData()
+# data2 = candle2.single_One_Minute_Last_Data()
+# print(data2)
+
+
+
+

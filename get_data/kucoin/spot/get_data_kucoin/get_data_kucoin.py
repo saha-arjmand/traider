@@ -16,11 +16,11 @@ class OneMinuteSpotData():
         ''' in this part of code we sure that the response from KUCOIN API get back
          if this code if we dont back status code 200 the code repeat again'''
         if response.status_code == 200:
-            return response.json()['data'][0]
+            return response.json()['data']
         else:
             while response.status_code != 200:
                 response = requests.get(url=url)
-        return response.json()['data'][0]
+        return response.json()['data']
 
     def multi_One_Minute_Data(self, number_of_Candles):
         first_time = Calculate_time.firstTime - (number_of_Candles - 1) * 60
@@ -39,5 +39,5 @@ class OneMinuteSpotData():
 
 
 candle = OneMinuteSpotData()
-data = candle.multi_One_Minute_Data(3)
+data = candle.single_One_Minute_Last_Data()
 print(data)

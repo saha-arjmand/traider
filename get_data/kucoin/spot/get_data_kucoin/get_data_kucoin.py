@@ -9,7 +9,13 @@ import numpy as np
 class OneMinuteSpotData():
 
     '''done'''
-    def past_multi_data(self, number_of_candles):
+    def __init__(self, number_of_candles=1):
+        self.number_of_candles = number_of_candles
+
+    '''done'''
+    def past_multi_data(self):
+        # this parameter send from constructor init method
+        number_of_candles = self.number_of_candles
         first_time = Calculate_time.firstTime - (number_of_candles - 1) * 60
         second_time = Calculate_time.lastTime
         url = CreateUrl.URL(second_time, first_time, "BTC-USDT", "1min")
@@ -25,10 +31,10 @@ class OneMinuteSpotData():
                 return response.json()['data']
 
     '''done'''
-    def past_multi_data_stdTime(self, number_of_candles):
+    def past_multi_data_stdTime(self):
 
         # Convert list obj to numpy array 2D obj
-        data = np.array(self.past_multi_data(number_of_candles))
+        data = np.array(self.past_multi_data())
 
         # data.shape[0] this command give us number of rows of our matrix
         i = 0
@@ -41,7 +47,9 @@ class OneMinuteSpotData():
 
         return data
 
+    '''we want to create column data OHLC from get api data'''
+
 
 s = OneMinuteSpotData()
-d = s.past_multi_data_stdTime(1)
+d = s.past_multi_data_stdTime()
 print(d)

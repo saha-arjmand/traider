@@ -55,8 +55,10 @@ class OneMinuteSpotData:
 
         df = pd.DataFrame()
         df["time"], df["open"], df["close"], \
-        df["high"], df["Low"], df["volume"], df["amount"] = data.T
+            df["high"], df["Low"], df["volume"], df["amount"] = data.T
 
+        # this code set time column to our index dataframe
+        df.set_index('time', inplace=True)
         return df
 
 

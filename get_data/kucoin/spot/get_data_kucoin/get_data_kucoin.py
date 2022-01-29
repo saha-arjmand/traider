@@ -2,63 +2,46 @@ from traider.utils.time.time import Calculate_time
 from traider.get_data.kucoin.spot.url import CreateUrl
 import requests
 import pandas as pd
+import numpy as np
 
 
 # Get Data From API
 class OneMinuteSpotData():
 
-    def single_One_Minute_Last_Data(self):
-        first_time = Calculate_time.firstTime
+    '''done'''
+    def past_multi_data(self, number_of_candles):
+        first_time = Calculate_time.firstTime - (number_of_candles - 1) * 60
         second_time = Calculate_time.lastTime
         url = CreateUrl.URL(second_time, first_time, "BTC-USDT", "1min")
         response = requests.get(url=url)
 
         ''' in this part of code we sure that the response from KUCOIN API get back
-         if this code if we dont back status code 200 the code repeat again'''
-        timeObj = Calculate_time()
+         if this code we dont back status code 200 the code repeat again'''
         if response.status_code == 200:
-            '''this for is convert time second to standard format time'''
-            for anyItem in response.json()['data']:
-                anyItem[0] = str(timeObj.convert_second_to_utc_time(int(anyItem[0])))
-                return anyItem
+            return response.json()['data']
         else:
             while response.status_code != 200:
                 response = requests.get(url=url)
-        for anyItem in response.json()['data']:
-            anyItem[0] = str(timeObj.convert_second_to_utc_time(int(anyItem[0])))
-            return anyItem
+                return response.json()['data']
+
+    '''done'''
+    def past_multi_data_stdTime(self, number_of_candles):
+
+        # Convert list obj to numpy array 2D obj
+        data = np.array(self.past_multi_data(number_of_candles))
+
+        # data.shape[0] this command give us number of rows of our matrix
+        i = 0
+        # with calcobj.convert_second_to_utc_time we convert seconds to std time
+        calcobj = Calculate_time()
+        while i < data.shape[0]:
+            # data[i,0] give us the index0 (time) of our matrix
+            data[i,0] = calcobj.convert_second_to_utc_time(int(data[i,0]))
+            i += 1
+
+        return data
 
 
-    def multi_One_Minute_Data(self, number_of_Candles):
-        first_time = Calculate_time.firstTime - (number_of_Candles - 1) * 60
-        second_time = Calculate_time.lastTime
-        url = CreateUrl.URL(second_time, first_time, "BTC-USDT", "1min")
-        response = requests.get(url=url)
-
-        ''' in this part of code we sure that the response from KUCOIN API get back
-         if this code if we dont back status code 200 the code repeat again'''
-        timeObj = Calculate_time()
-        '''this for is convert time second to standard format time'''
-        if response.status_code == 200:
-            for anyItem in response.json()['data']:
-                anyItem[0] = str(timeObj.convert_second_to_utc_time(int(anyItem[0])))
-                print(anyItem)
-        else:
-            while response.status_code != 200:
-                response = requests.get(url=url)
-                for anyItem in response.json()['data']:
-                    anyItem[0] = str(timeObj.convert_second_to_utc_time(int(anyItem[0])))
-                    print(anyItem)
-
-
-candle = OneMinuteSpotData()
-data = candle.multi_One_Minute_Data(10)
-
-
-# candle2 = OneMinuteSpotData()
-# data2 = candle2.single_One_Minute_Last_Data()
-# print(data2)
-
-
-
-
+s = OneMinuteSpotData()
+d = s.past_multi_data_stdTime(1)
+print(d)

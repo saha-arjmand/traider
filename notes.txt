@@ -1,10 +1,13 @@
  کارها
  --------------------------------
 
-. Convert column 1 of jason data as seconds to std time data
-. Number of row of column One
-به دست آوردن کندل های استاندارد 5 دقیقه و بقیه اش
-
+. Number of row of column One and frame json data with title OHLC
+. Create 5 minutes data function
+. Create 15 minutes data function
+. Create 30 minutes data function
+. create 1 hour data function
+. create 4 hour data function
+. create 1 day data function
 
 
  --------------------------------
@@ -19,3 +22,5 @@
 put try except to 1minSpotCandleData for too many request error
 . add MultiOneMinuteData Candle Class
 . Create Seconds to utc time function in time.py
+. Convert column 1 of jason data as seconds to std time data
+. change convert time method with numpy array convert and delete lastPrice method

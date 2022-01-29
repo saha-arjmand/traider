@@ -4,6 +4,9 @@ import requests
 import pandas as pd
 import numpy as np
 
+# Option to display
+pd.set_option('display.max_columns', None)
+
 
 # Get Data From API
 class OneMinuteSpotData:
@@ -41,14 +44,22 @@ class OneMinuteSpotData:
         calcobj = Calculate_time()
         while i < data.shape[0]:
             # data[i,0] give us the index0 (time) of our matrix
-            data[i,0] = calcobj.convert_second_to_utc_time(int(data[i,0]))
+            data[i, 0] = calcobj.convert_second_to_utc_time(int(data[i, 0]))
             i += 1
 
         return data
 
-    '''we want to create column data OHLC from get api data'''
+    '''done'''
+    def data_sorting(self):
+        data = self.past_data_stdTime()
+
+        df = pd.DataFrame()
+        df["time"], df["open"], df["close"], \
+        df["high"], df["Low"], df["volume"], df["amount"] = data.T
+
+        return df
 
 
-s = OneMinuteSpotData(2)
-d = s.past_data_stdTime()
+s = OneMinuteSpotData(5)
+d = s.data_sorting()
 print(d)

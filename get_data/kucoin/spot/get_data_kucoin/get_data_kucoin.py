@@ -6,14 +6,13 @@ import numpy as np
 
 
 # Get Data From API
-class OneMinuteSpotData():
+class OneMinuteSpotData:
 
-    '''done'''
     def __init__(self, number_of_candles=1):
         self.number_of_candles = number_of_candles
 
     '''done'''
-    def past_multi_data(self):
+    def __get_data(self):
         # this parameter send from constructor init method
         number_of_candles = self.number_of_candles
         first_time = Calculate_time.firstTime - (number_of_candles - 1) * 60
@@ -31,10 +30,10 @@ class OneMinuteSpotData():
                 return response.json()['data']
 
     '''done'''
-    def past_multi_data_stdTime(self):
+    def past_data_stdTime(self):
 
         # Convert list obj to numpy array 2D obj
-        data = np.array(self.past_multi_data())
+        data = np.array(self.__get_data())
 
         # data.shape[0] this command give us number of rows of our matrix
         i = 0
@@ -50,6 +49,6 @@ class OneMinuteSpotData():
     '''we want to create column data OHLC from get api data'''
 
 
-s = OneMinuteSpotData()
-d = s.past_multi_data_stdTime()
+s = OneMinuteSpotData(2)
+d = s.past_data_stdTime()
 print(d)

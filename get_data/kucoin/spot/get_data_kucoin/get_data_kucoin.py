@@ -1,8 +1,12 @@
 from traider.utils.time.time import Calculate_time
 from traider.get_data.kucoin.spot.url import CreateUrl
+from traider.database import database
+from traider.database import secrets
+from sqlalchemy import create_engine
 import requests
 import pandas as pd
 import numpy as np
+import pymysql
 
 # Option to display
 pd.set_option('display.max_columns', None)
@@ -58,14 +62,24 @@ class OneMinuteSpotData:
             df["high"], df["Low"], df["volume"], df["amount"] = data.T
 
         # this code set time column to our index dataframe
-        df.set_index('time', inplace=True)
+        # df.set_index('time', inplace=True)
         return df
 
     '''save past data to database'''
     def save_data_db(self):
-        pass
+        db = database.DataBase()
+        if db.isExist_db():
+            print("save")
+            my_conn = create_engine(
+            f"mysql+pymysql://{secrets.dbuser}:{secrets.dbpass}@{secrets.dbhost}/{secrets.dbname}")
+            self.data_sorting().to_sql(con=my_conn, name='1mindata', if_exists='append', index=True)
+        else:
+            print("false")
 
 
-s = OneMinuteSpotData(24*60*5)
-d = s.data_sorting()
-print(d)
+
+
+s = OneMinuteSpotData(2)
+# print(s.data_sorting())
+s.save_data_db()
+

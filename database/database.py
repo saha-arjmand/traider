@@ -7,7 +7,7 @@ class DataBase:
         user="root",
         passwd="adminadmin")
 
-    def not_exist_db(self):
+    def isExist_db(self):
 
         myCursor = DataBase.myDb.cursor()
 
@@ -18,14 +18,14 @@ class DataBase:
             listDb.append(anyDb[0])
 
         # our database name is traiderdb
-        if 'traiderdb' not in listDb:
+        if 'traiderdb' in listDb:
             return True
         else:
             return False
 
     def connect_and_create_db(self):
 
-        if self.not_exist_db():
+        if not self.isExist_db():
             myCursor = DataBase.myDb.cursor()
             myCursor.execute("CREATE DATABASE traiderdb")
             print("The database with name traiderdb created")
@@ -46,7 +46,3 @@ class DataBase:
             listDb.append(anyDb[0])
 
         print(listDb)
-
-db = DataBase()
-db.connect_and_create_db()
-db.show_dbs()

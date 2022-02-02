@@ -1,6 +1,9 @@
- کارها
+ Todos
  --------------------------------
 
+. create tables for mysqldatabase
+. Save dataframe to database
+. Create now 1 minute data giver
 . Create Chart of 1 minutes
 . Create 5 minutes data function
 . Create 15 minutes data function
@@ -27,3 +30,4 @@
 . private past_multi_data method it's just for calculate std time in next method
 . frame json data with title OHLC
 . Create index from time for dataframe market price
+. create mysql database for project

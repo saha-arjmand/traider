@@ -61,7 +61,11 @@ class OneMinuteSpotData:
         df.set_index('time', inplace=True)
         return df
 
+    '''save past data to database'''
+    def save_data_db(self):
+        pass
 
-s = OneMinuteSpotData(5)
+
+s = OneMinuteSpotData(24*60*5)
 d = s.data_sorting()
 print(d)

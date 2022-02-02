@@ -2,32 +2,44 @@ import mysql.connector as sql
 
 class DataBase:
 
-    def connect_and_create_db(self):
-        myDb0 = sql.connect(
-            host="localhost",
-            user="root",
-            passwd="adminadmin")
+    myDb = sql.connect(
+        host="localhost",
+        user="root",
+        passwd="adminadmin")
 
-        myCursor0 = myDb0.cursor()
+    def not_exist_db(self):
+
+        myCursor = DataBase.myDb.cursor()
 
         # databases Names
-        myCursor0.execute("show databases")
+        myCursor.execute("show databases")
         listDb = []
-        for anyDb in myCursor0:
+        for anyDb in myCursor:
             listDb.append(anyDb[0])
 
-        # create Database if it not exist
-        # database name is traiderdb
+        # our database name is traiderdb
         if 'traiderdb' not in listDb:
-            myCursor0.execute("CREATE DATABASE traiderdb")
+            return True
+        else:
+            return False
 
-        myDb1 = sql.connect(
+    def connect_and_create_db(self):
+
+        if self.not_exist_db():
+            myCursor = DataBase.myDb.cursor()
+            myCursor.execute("CREATE DATABASE traiderdb")
+            print("The database with name traiderdb created")
+        else:
+            print("The database already exist")
+
+        myDb = sql.connect(
             host="localhost",
             user="root",
             passwd="adminadmin",
             database="traiderdb")
 
-        myCursor = myDb1.cursor()
+    def show_dbs(self):
+        myCursor = DataBase.myDb.cursor()
         myCursor.execute("show databases")
         listDb = []
         for anyDb in myCursor:
@@ -35,15 +47,6 @@ class DataBase:
 
         print(listDb)
 
-
-
-
-
-
-
-
-    def showDb(self):
-        pass
-
 db = DataBase()
 db.connect_and_create_db()
+db.show_dbs()

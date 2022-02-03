@@ -35,3 +35,5 @@
 . seperated date from time in first column and create that func
 . Save dataframe to database
 . fix bug from time response
+. uniq data in database for any candles
+. Create tables with sqlAlchemy for traiderdb db

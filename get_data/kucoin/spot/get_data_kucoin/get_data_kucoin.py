@@ -2,11 +2,11 @@ from traider.utils.time.time import Calculate_time
 from traider.get_data.kucoin.spot.url import CreateUrl
 from traider.database import database
 from traider.database import secrets
-from sqlalchemy import create_engine
+from traider.database.kucoin_db import kucoin_tables
 import requests
 import pandas as pd
 import numpy as np
-import pymysql
+
 
 # Option to display
 pd.set_option('display.max_columns', None)
@@ -101,9 +101,7 @@ class OneMinuteSpotData:
         db = database.DataBase()
 
         if db.isExist_db():
-            my_conn = create_engine(
-            f"mysql+pymysql://{secrets.dbuser}:{secrets.dbpass}@{secrets.dbhost}/{secrets.dbname}")
-            data.to_sql(con=my_conn, name='1mindata', if_exists='replace', index=True)
+            data.to_sql(con=kucoin_tables.my_conn, name='spotdata', if_exists='replace', index=True)
             print("save data to databases")
         else:
             print("database not found !")
@@ -117,7 +115,7 @@ class OneMinuteSpotData:
 
 
 
-s = OneMinuteSpotData(10)
+s = OneMinuteSpotData(15)
 data1 = s.data_sorting()
 print(data1)
 s.save_data_db(data1)

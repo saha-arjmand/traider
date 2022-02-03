@@ -2,7 +2,6 @@ from traider.utils.time.time import Calculate_time
 from traider.get_data.kucoin.spot.url import CreateUrl
 from traider.database import database
 from traider.database import secrets
-from traider.database.kucoin_db import kucoin_tables
 import requests
 import pandas as pd
 import numpy as np
@@ -98,13 +97,10 @@ class OneMinuteSpotData:
     '''done'''
     def save_data_db(self, data):
 
+        tableName = "spotdata"
         db = database.DataBase()
+        db.savedb(data, tableName)
 
-        if db.isExist_db():
-            data.to_sql(con=kucoin_tables.my_conn, name='spotdata', if_exists='replace', index=True)
-            print("save data to databases")
-        else:
-            print("database not found !")
 
     '''working'''
     def one_min_past_24h_data(self):
@@ -112,16 +108,7 @@ class OneMinuteSpotData:
         candleNumber = 1
 
 
-
-
-
-s = OneMinuteSpotData(15)
-data1 = s.data_sorting()
-print(data1)
-s.save_data_db(data1)
-
-
-
-
-
-
+s = OneMinuteSpotData(10)
+data = s.data_sorting()
+print(data)
+s.save_data_db(data)

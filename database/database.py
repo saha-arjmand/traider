@@ -1,4 +1,6 @@
 import mysql.connector as sql
+from traider.database.kucoin_db import kucoin_tables
+
 
 class DataBase:
 
@@ -47,4 +49,10 @@ class DataBase:
 
         print(listDb)
 
+    def savedb(self, data, tableName):
 
+        if self.isExist_db():
+            data.to_sql(con=kucoin_tables.my_conn, name=tableName, if_exists='replace', index=True)
+            print("save data to databases")
+        else:
+            print("database not found !")

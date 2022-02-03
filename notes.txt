@@ -37,3 +37,4 @@
 . fix bug from time response
 . uniq data in database for any candles
 . Create tables with sqlAlchemy for traiderdb db
+. Create save_db method in database class

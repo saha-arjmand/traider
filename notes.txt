@@ -1,7 +1,8 @@
  Todos
  --------------------------------
 
-. Save dataframe to database
+. Create 1min nextdata
+
 . Create now 1 minute data giver
 . Create Chart of 1 minutes
 . Create 5 minutes data function
@@ -32,3 +33,5 @@
 . create mysql database for project
 . create tables code in save data func for mysqldatabase
 . seperated date from time in first column and create that func
+. Save dataframe to database
+. fix bug from time response

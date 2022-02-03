@@ -52,8 +52,8 @@ class OneMinuteSpotData:
             dataInfo = np.delete(anyItem, 0)
 
             # DateTime
-            # 2 : i want a uniq field for create primary key in our database and it's datetime
-            datetimeInfo = calcobj.convert_second_to_utc_time(int(data[i, 0]))
+            # 2 : i want a uniq field for create primary key in our database and it's datetime seconds
+            id = int(data[i, 0])
 
             # Date
             # 3 : Gain date from convert first column (seconds) to std uts date
@@ -64,7 +64,7 @@ class OneMinuteSpotData:
             timeInfo = calcobj.convert_second_to_utc_time(int(data[i, 0])).time()
 
             # 5 : add datetime that extract in step 2 to final array
-            fullData1 = np.insert(dataInfo, 0, datetimeInfo, axis=0)
+            fullData1 = np.insert(dataInfo, 0, id, axis=0)
 
             # 6 : add date that extract in step 2 to final array
             fullData2 = np.insert(fullData1, 1, dateInfo, axis=0)
@@ -88,7 +88,7 @@ class OneMinuteSpotData:
         data = self.convert_std_datetime()
 
         df = pd.DataFrame()
-        df["datetime"], df["date"], df["time"], df["open"], df["close"], \
+        df["id"], df["date"], df["time"], df["open"], df["close"], \
             df["high"], df["Low"], df["volume"], df["amount"] = data.T
 
         # this code set time column to our index dataframe
@@ -103,7 +103,7 @@ class OneMinuteSpotData:
         if db.isExist_db():
             my_conn = create_engine(
             f"mysql+pymysql://{secrets.dbuser}:{secrets.dbpass}@{secrets.dbhost}/{secrets.dbname}")
-            data.to_sql(con=my_conn, name='1mindata', if_exists='append', index=True)
+            data.to_sql(con=my_conn, name='1mindata', if_exists='replace', index=True)
             print("save data to databases")
         else:
             print("database not found !")
@@ -120,8 +120,8 @@ class OneMinuteSpotData:
 s = OneMinuteSpotData(10)
 data1 = s.data_sorting()
 print(data1)
-# s.save_data_db(data1)
-# print(data1)
+s.save_data_db(data1)
+
 
 
 

@@ -103,12 +103,19 @@ class OneMinuteSpotData:
 
 
     '''working'''
-    def one_min_past_24h_data(self):
+    def one_min_past_24h_data(self, daysNumber=0):
+        calctime = Calculate_time()
+        lastTime = calctime.convert_second_to_utc_time(calctime.lastTime)
+        lastTime_hour = lastTime.hour
+        lastTim_minute = lastTime.minute
+        totalTimePast = ((lastTime_hour * 60) + lastTim_minute) + (daysNumber * 24 * 60)
+        self.number_of_candles = totalTimePast
+        data = self.data_sorting()
 
-        candleNumber = 1
+        print(f"total minutes is : {totalTimePast}")
+        return data
 
 
 s = OneMinuteSpotData(10)
-data = s.data_sorting()
+data = s.one_min_past_24h_data()
 print(data)
-s.save_data_db(data)

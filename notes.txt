@@ -1,6 +1,6 @@
  Todos
  --------------------------------
-
+. Create 1min 24h data for 2 or more days with generators
 . Create 1min nextdata
 
 . Create now 1 minute data giver
@@ -38,3 +38,4 @@
 . uniq data in database for any candles
 . Create tables with sqlAlchemy for traiderdb db
 . Create save_db method in database class
+. Create 1min 24h data func

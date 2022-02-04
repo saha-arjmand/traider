@@ -1,5 +1,7 @@
  Todos
  --------------------------------
+. solve bug : double yield in days(min) method
+
 
 . Create 1min 24h data for 2 or more days with generators
 . Create 1min nextdata
@@ -41,3 +43,4 @@
 . Create save_db method in database class
 . Create 1min 24h data func
 . Create Generator func for minus days from now.utc
+. I want to change firstTime and lastTime out of getData func and change get_data func

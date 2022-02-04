@@ -13,17 +13,38 @@ pd.set_option('display.max_columns', None)
 # Get Data From API
 class OneMinuteSpotData:
 
-    def __init__(self, number_of_candles=1):
+    """ In this Class Constructor if we set firstTime & lastTime Parameter then the
+    number_of_candles parameters dont use in this Class"""
+    def __init__(self, number_of_candles=1, firstTime=0, lastTime=0):
         self.number_of_candles = number_of_candles
+        self.firstTime = firstTime
+        self.lastTime = lastTime
 
     '''done'''
     def get_data(self):
-        # this parameter send from constructor init method
-        number_of_candles = self.number_of_candles
-        first_time = Calculate_time.firstTime - (number_of_candles - 1) * 60
-        second_time = Calculate_time.lastTime
-        url = CreateUrl.URL(second_time, first_time, "BTC-USDT", "1min")
-        response = requests.get(url=url)
+
+        firstTime = self.firstTime
+        lastTime = self.lastTime
+
+        if firstTime == 0 and lastTime == 0:
+
+            # this parameter send from constructor init method
+            number_of_candles = self.number_of_candles
+
+            first_time = Calculate_time.firstTime - (number_of_candles - 1) * 60
+            last_time = Calculate_time.lastTime
+            url = CreateUrl.URL(last_time, first_time, "BTC-USDT", "1min")
+            response = requests.get(url=url)
+
+        else:
+            '''
+            in this part of if statement we dont need to candlesNumber and we create link with
+            first and last time parameters
+            '''
+            first_Time = self.firstTime
+            last_Time = self.lastTime
+            url = CreateUrl.URL(last_Time, firstTime, "BTC-USDT", "1min")
+            response = requests.get(url=url)
 
         ''' in this part of code we sure that the response from KUCOIN API get back
          if this code we dont back status code 200 the code repeat again'''
@@ -102,34 +123,44 @@ class OneMinuteSpotData:
 
 
     '''working'''
-    def one_min_past_24h_data(self, daysNumber=0):
-        pass
-    #     calctime = Calculate_time()
-    #
-    #     i = 0
-    #     if daysNumber == 0:
-    #         # Today data
-    #         lastTime = calctime.convert_second_to_utc_time(calctime.lastTime)
-    #         lastTime_hour = lastTime.hour
-    #         lastTim_minute = lastTime.minute
-    #         totalTimePast = ((lastTime_hour * 60) + lastTim_minute)
-    #         self.number_of_candles = totalTimePast
-    #         print(f"{lastTime} and the time to end day is {24 - lastTime_hour}:{60 - lastTim_minute}"
-    #               f" = {((24 - lastTime_hour - 1) * 60) + (60 - lastTim_minute)}")
-    #         print(f"left over of time : {24 - lastTime_hour - 1}:{60 - lastTim_minute}")
-    #
-    #         return self.data_sorting()
-    #     else:
-    #         i = 0
-    #         while i < daysNumber:
-    #             first_hoar = calctime.firstTime
-    #             yield data
+    def one_min_past_24h_data(self, daysNumber=1):
 
-        # print(f"total minutes is : {totalTimePast}")
+        # first we create a object from time Class for convert time
+        calctime = Calculate_time()
+
+        # Today data : in below code we calculate today code
+        todayLastTime = calctime.convert_second_to_utc_time(calctime.lastTime)
+        TodayLastTime_hour = todayLastTime.hour
+        TodayLastTime_minute = todayLastTime.minute
+        # total past minute in today is totalTimePastToday
+        totalTimePast = ((TodayLastTime_hour * 60) + TodayLastTime_minute)
+        # So just we equal number_of_candles to this totalTimePastToday obj
+        # base totalTimePast is number of Today minutes
+
+        i = 0
+        while i < daysNumber:
+            firstTime = calctime.pastDay_datetime(daysNumber)
+
+            t = 0
+            for anyItem in firstTime:
+                # first we calculate lastTime
+                last_Time = anyItem[1]
+                # then we minus a day's seconds from last time to calculate firstTime
+                first_Time = last_Time - (24*60*60)
+
+                # then we replace it with first & last time in our getData
+                self.firstTime = first_Time
+                self.lastTime = last_Time
+
+                yield [str(calctime.convert_second_to_utc_time(first_Time)),
+                       str(calctime.convert_second_to_utc_time(last_Time))]
+
+            i += 1
 
 
 
-obj = OneMinuteSpotData(5)
-data = obj.data_sorting()
-print(data)
+dataObj = OneMinuteSpotData()
+data = dataObj.one_min_past_24h_data(2)
+for anyItem in data:
+    print(anyItem)
 

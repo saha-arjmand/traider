@@ -1,10 +1,5 @@
  Todos
  --------------------------------
-. solve bug : double yield in days(min) method
-
-
-. Create 1min 24h data for 2 or more days with generators
-. Create 1min nextdata
 
 . Create now 1 minute data giver
 . Create Chart of 1 minutes
@@ -44,3 +39,5 @@
 . Create 1min 24h data func
 . Create Generator func for minus days from now.utc
 . I want to change firstTime and lastTime out of getData func and change get_data func
+. solve bug : double yield in days(min) method
+. Create 1min 24h data for 2 or more days with generators

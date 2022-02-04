@@ -30,9 +30,9 @@ class Calculate_time:
             i += 1
 
 
-
+#
 # timeObj = Calculate_time()
-# data = timeObj.pastDay_datetime(10)
+# data = timeObj.pastDay_datetime(2)
 # for anyItem in data:
 #     print(anyItem)
 

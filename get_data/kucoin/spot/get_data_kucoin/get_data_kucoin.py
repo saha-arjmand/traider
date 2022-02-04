@@ -121,9 +121,8 @@ class OneMinuteSpotData:
         db = database.DataBase()
         db.savedb(data, tableName)
 
-
-    '''working'''
-    def one_min_past_24h_data(self, daysNumber=1):
+    '''done'''
+    def allDay_candles(self):
 
         # first we create a object from time Class for convert time
         calctime = Calculate_time()
@@ -136,31 +135,39 @@ class OneMinuteSpotData:
         totalTimePast = ((TodayLastTime_hour * 60) + TodayLastTime_minute)
         # So just we equal number_of_candles to this totalTimePastToday obj
         # base totalTimePast is number of Today minutes
+        self.number_of_candles = totalTimePast
+        print("this is today data")
+        return self.data_sorting()
 
-        i = 0
-        while i < daysNumber:
-            firstTime = calctime.pastDay_datetime(daysNumber)
+    '''this function one_min_past_24h_data has 2 yield and one yield is for today data
+        and second yield is for other days yield data and show data to dataframe model'''
+    def one_min_past_24h_data(self, daysNumber=1):
+        # Today data
+        yield self.allDay_candles()
 
-            t = 0
-            for anyItem in firstTime:
-                # first we calculate lastTime
-                last_Time = anyItem[1]
-                # then we minus a day's seconds from last time to calculate firstTime
-                first_Time = last_Time - (24*60*60)
+        # first we create a object from time Class for convert time
+        calctime = Calculate_time()
 
-                # then we replace it with first & last time in our getData
-                self.firstTime = first_Time
-                self.lastTime = last_Time
+        timespan = calctime.pastDay_datetime(daysNumber)
 
-                yield [str(calctime.convert_second_to_utc_time(first_Time)),
-                       str(calctime.convert_second_to_utc_time(last_Time))]
+        for anyItem in timespan:
+            # first we calculate lastTime
+            last_Time = anyItem[1]
+            # then we minus a day's seconds from last time to calculate firstTime
+            first_Time = last_Time - (24 * 60 * 60)
 
-            i += 1
-
+            # then we replace it with first & last time in our getData
+            self.firstTime = first_Time
+            self.lastTime = last_Time
+            print("this is next day data")
+            yield self.data_sorting()
 
 
 dataObj = OneMinuteSpotData()
 data = dataObj.one_min_past_24h_data(2)
+# print(data)
 for anyItem in data:
     print(anyItem)
+
+
 

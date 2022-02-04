@@ -1,5 +1,6 @@
  Todos
  --------------------------------
+
 . Create 1min 24h data for 2 or more days with generators
 . Create 1min nextdata
 
@@ -39,3 +40,4 @@
 . Create tables with sqlAlchemy for traiderdb db
 . Create save_db method in database class
 . Create 1min 24h data func
+. Create Generator func for minus days from now.utc

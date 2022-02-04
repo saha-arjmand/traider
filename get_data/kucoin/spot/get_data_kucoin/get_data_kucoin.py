@@ -1,7 +1,6 @@
 from traider.utils.time.time import Calculate_time
 from traider.get_data.kucoin.spot.url import CreateUrl
 from traider.database import database
-from traider.database import secrets
 import requests
 import pandas as pd
 import numpy as np
@@ -104,18 +103,33 @@ class OneMinuteSpotData:
 
     '''working'''
     def one_min_past_24h_data(self, daysNumber=0):
-        calctime = Calculate_time()
-        lastTime = calctime.convert_second_to_utc_time(calctime.lastTime)
-        lastTime_hour = lastTime.hour
-        lastTim_minute = lastTime.minute
-        totalTimePast = ((lastTime_hour * 60) + lastTim_minute) + (daysNumber * 24 * 60)
-        self.number_of_candles = totalTimePast
-        data = self.data_sorting()
+        pass
+    #     calctime = Calculate_time()
+    #
+    #     i = 0
+    #     if daysNumber == 0:
+    #         # Today data
+    #         lastTime = calctime.convert_second_to_utc_time(calctime.lastTime)
+    #         lastTime_hour = lastTime.hour
+    #         lastTim_minute = lastTime.minute
+    #         totalTimePast = ((lastTime_hour * 60) + lastTim_minute)
+    #         self.number_of_candles = totalTimePast
+    #         print(f"{lastTime} and the time to end day is {24 - lastTime_hour}:{60 - lastTim_minute}"
+    #               f" = {((24 - lastTime_hour - 1) * 60) + (60 - lastTim_minute)}")
+    #         print(f"left over of time : {24 - lastTime_hour - 1}:{60 - lastTim_minute}")
+    #
+    #         return self.data_sorting()
+    #     else:
+    #         i = 0
+    #         while i < daysNumber:
+    #             first_hoar = calctime.firstTime
+    #             yield data
 
-        print(f"total minutes is : {totalTimePast}")
-        return data
+        # print(f"total minutes is : {totalTimePast}")
 
 
-s = OneMinuteSpotData(10)
-data = s.one_min_past_24h_data()
+
+obj = OneMinuteSpotData(5)
+data = obj.data_sorting()
 print(data)
+

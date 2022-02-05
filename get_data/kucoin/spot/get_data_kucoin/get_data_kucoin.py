@@ -66,6 +66,10 @@ class OneMinuteSpotData:
 
         try:
             response = requests.get(url=url)
+
+            # add status code to log file
+            self.Log += f"Response request status code : {response.status_code}\n"
+
             return response.json()['data']
         except requests.ConnectionError as e:
             return "\nConnection Error: DNS failure or refused connection"
@@ -82,7 +86,6 @@ class OneMinuteSpotData:
             timePassed = round((stopwatch_stop - stopwatch_start), 3)
             self.Log += "get data:\n"
             self.Log += f"Time passed : {timePassed} s\n"
-            self.Log += f"Response request status code : {response.status_code}\n"
 
     '''done'''
     def convert_std_datetime(self):

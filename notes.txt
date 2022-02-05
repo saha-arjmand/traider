@@ -2,6 +2,7 @@
  --------------------------------
 
 . Create loop for http and TooManyRedirects errors for back data with time space
+. Create setting for try again factors
 
 . Create 1min next data in get data
 

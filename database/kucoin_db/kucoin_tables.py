@@ -28,7 +28,7 @@ class kucoinSpotDataOneMin(Base):
     id = Column(Integer(), primary_key=True)
     date = Column(Date(), nullable=False)
     time = Column(Time(), nullable=False)
-    symbol = Column(String(), nullable=False)
+    symbol = Column(String(32), nullable=False)
     open = Column(Float(), nullable=False)
     close = Column(Float(), nullable=False)
     high = Column(Float(), nullable=False)

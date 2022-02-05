@@ -5,7 +5,7 @@ from traider.get_data.kucoin.spot.symbol.symbols import Symbols
 import requests
 import pandas as pd
 import numpy as np
-
+import time
 
 # Option to display
 pd.set_option('display.max_columns', None)
@@ -15,59 +15,75 @@ pd.set_option('display.max_columns', None)
 class OneMinuteSpotData:
 
     """ In this Class Constructor if we set firstTime & lastTime Parameter then the
-    number_of_candles parameters dont use in this Class"""
+        number_of_candles parameters dont use in this Class                         """
     def __init__(self, symbol, number_of_candles=1, firstTime=0, lastTime=0):
-        self.number_of_candles = number_of_candles
-        self.symbol = symbol
-        self.firstTime = firstTime
-        self.lastTime = lastTime
+
+        # check type of integer values is int
+        if (type(number_of_candles) | type(firstTime) | type(lastTime)) is int:
+            self.number_of_candles = number_of_candles
+            self.firstTime = firstTime
+            self.lastTime = lastTime
+
+        # check type of string values is str
+        if type(symbol) is str:
+            self.symbol = symbol
 
     '''done'''
     def get_data(self):
+
+        # Create stopWatch for Calculate how many time elapsed for this function
+        stopwatch_start = time.perf_counter()
 
         firstTime = self.firstTime
         lastTime = self.lastTime
         symbol = self.symbol
 
+        # we Create urlObj for Create and use Url
+        urlObj = CreateUrl()
+
         # Create obj from Symbol Class to check symbol is correct
         symbolObj = Symbols()
         # if check symbol is true then start create the url for request
-        if symbolObj.check_symbol(symbol):
+        # if symbolObj.check_symbol(symbol):
 
-            if firstTime == 0 and lastTime == 0:
+        if firstTime == 0 and lastTime == 0:
 
-                # this parameter send from constructor init method
-                number_of_candles = self.number_of_candles
+            # this parameter send from constructor init method
+            number_of_candles = self.number_of_candles
 
-                first_time = Calculate_time.firstTime - (number_of_candles - 1) * 60
-                last_time = Calculate_time.lastTime
-                url = CreateUrl.URL(last_time, first_time, symbol, "1min")
-                response = requests.get(url=url)
+            first_time = Calculate_time.firstTime - (number_of_candles - 1) * 60
+            last_time = Calculate_time.lastTime
 
-            else:
-                '''
-                in this part of if statement we dont need to candlesNumber and we create link with
-                first and last time parameters
-                '''
-                first_Time = self.firstTime
-                last_Time = self.lastTime
-                url = CreateUrl.URL(last_Time, firstTime, "BTC-USDT", "1min")
-                response = requests.get(url=url)
+            # use from urlObj to create url
+            url = urlObj.URL(last_time, first_time, symbol, "1min")
 
-        # else if the symbol not correct
         else:
-            print("the symbol not correct !")
+            '''
+            in this part of if statement we dont need to candlesNumber and we create link with
+            first and last time parameters
+            '''
+            first_Time = self.firstTime
+            last_Time = self.lastTime
+            # use from urlObj to create url
+            url = urlObj.URL(last_Time, first_Time, symbol, "1min")
 
-
-
-        ''' in this part of code we sure that the response from KUCOIN API get back
-         if this code we dont back status code 200 the code repeat again'''
-        if response.status_code == 200:
+        try:
+            response = requests.get(url=url)
             return response.json()['data']
-        else:
-            while response.status_code != 200:
-                response = requests.get(url=url)
-                return response.json()['data']
+        except requests.ConnectionError as e:
+            return "\nConnection Error: DNS failure or refused connection"
+        except requests.HTTPError as e:
+            return "\nHTTP Error: event of the rare invalid HTTP response", e
+        except requests.Timeout as e:
+            return "\nTimeout Error: i must write loop code here per 5 time per 5 second", e
+        except requests.TooManyRedirects as e:
+            return "\nTimeout Error: i must write loop code here per 5 time per 5 second", e
+        except Exception as e:
+            return "\nUnhandled Exception occurred : ", e
+        finally:
+            stopwatch_stop = time.perf_counter()
+            print(f"Elapsed time during the get data method in seconds: "
+                  f"{stopwatch_stop - stopwatch_start} s")
 
     '''done'''
     def convert_std_datetime(self):
@@ -178,10 +194,25 @@ class OneMinuteSpotData:
             print("this is next day data")
             yield self.data_sorting()
 
+    ''' working '''
+    def next_one_min_data(self):
+        pass
 
-dataObj = OneMinuteSpotData("BTC-USDT")
-data = dataObj.data_sorting()
+
+# n, m = map(int, input().split())
+#
+# stopwatch_start = time.perf_counter()
+#
+# for i in range(n):
+#     t = int(input())
+#     if t % m == 0:
+#         print(t)
+#
+# stopwatch_stop = time.perf_counter()
+#
+# print("Elapsed time:", t1_stop, t1_start)
+# print("Elapsed time during the whole program in seconds: ", t1_stop - t1_start)
+
+getDataObj = OneMinuteSpotData("BTC-USDT")
+data = getDataObj.get_data()
 print(data)
-
-
-

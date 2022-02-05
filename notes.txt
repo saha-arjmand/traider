@@ -1,9 +1,7 @@
  Todos
  --------------------------------
 
-. add "symbol" in dataframe of getdata
-. recreate the database and tables
-. check database for one time column and replace data
+. Create log option for getData func
 . Create 1min next data in get data
 
 . Create Class of database (tables) separated for any coin's symbol
@@ -54,3 +52,7 @@
 . solve bug : double yield in days(min) method
 . Create 1min 24h data for any days with generators
 . Create now 1 minute data giver
+. add "symbol" in dataframe of getdata
+. recreate the database and tables
+. check database for one time column and replace data
+. try except for requests response & make stopwatch for get data func

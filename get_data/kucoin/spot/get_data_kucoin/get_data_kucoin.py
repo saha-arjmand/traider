@@ -43,11 +43,6 @@ class OneMinuteSpotData:
         # we Create urlObj for Create and use Url
         urlObj = CreateUrl()
 
-        # Create obj from Symbol Class to check symbol is correct
-        symbolObj = Symbols()
-        # if check symbol is true then start create the url for request
-        # if symbolObj.check_symbol(symbol):
-
         if firstTime == 0 and lastTime == 0:
 
             # this parameter send from constructor init method
@@ -84,10 +79,10 @@ class OneMinuteSpotData:
             return "\nUnhandled Exception occurred : ", e
         finally:
             stopwatch_stop = time.perf_counter()
-
+            timePassed = round((stopwatch_stop - stopwatch_start), 3)
             self.Log += "get data:\n"
-            self.Log += f"Time passed : {stopwatch_stop - stopwatch_start} s\n"
-            self.Log += f"Response request staus code : {response.status_code}\n"
+            self.Log += f"Time passed : {timePassed} s\n"
+            self.Log += f"Response request status code : {response.status_code}\n"
 
     '''done'''
     def convert_std_datetime(self):

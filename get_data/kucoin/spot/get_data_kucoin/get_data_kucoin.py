@@ -104,15 +104,17 @@ class OneMinuteSpotData:
 
             # 5 : add time that extract in step 3 to final array
             # for add to a numpy array the data must be a tuple so we casting data to tuple
-            fullData3 = tuple(np.insert(fullData2, 2, timeInfo, axis=0))
+            fullData3 = np.insert(fullData2, 2, timeInfo, axis=0)
 
-            # 6 : we must add fullData2 to a 2D array
-            finalList.append(fullData3)
+            # 6 : add symbol to our dataframe
+            fullData4 = tuple(np.insert(fullData3, 3, self.symbol, axis=0))
+
+            # 7 : we must add fullData2 to a 2D array
+            finalList.append(fullData4)
 
             i += 1
 
         final = np.array(finalList)
-
 
         return final
 
@@ -121,7 +123,7 @@ class OneMinuteSpotData:
         data = self.convert_std_datetime()
 
         df = pd.DataFrame()
-        df["id"], df["date"], df["time"], df["open"], df["close"], \
+        df["id"], df["date"], df["time"], df["symbol"], df["open"], df["close"], \
             df["high"], df["Low"], df["volume"], df["amount"] = data.T
 
         # this code set time column to our index dataframe
@@ -178,7 +180,7 @@ class OneMinuteSpotData:
 
 
 dataObj = OneMinuteSpotData("BTC-USDT")
-data = dataObj.get_data()
+data = dataObj.data_sorting()
 print(data)
 
 

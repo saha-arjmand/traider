@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Date, Time, Float, Integer
+from sqlalchemy import Column, Date, Time, Float, Integer, String
 import os
 from traider.database import secrets
 import pymysql
@@ -28,6 +28,7 @@ class kucoinSpotDataOneMin(Base):
     id = Column(Integer(), primary_key=True)
     date = Column(Date(), nullable=False)
     time = Column(Time(), nullable=False)
+    symbol = Column(String(), nullable=False)
     open = Column(Float(), nullable=False)
     close = Column(Float(), nullable=False)
     high = Column(Float(), nullable=False)

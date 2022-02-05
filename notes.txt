@@ -1,8 +1,16 @@
  Todos
  --------------------------------
 
-. Create now 1 minute data giver
+. add "symbol" in dataframe of getdata
+. Create 1min next data in get data
+
+. Create market symbols picker class
+. check if symbol in market symbols then start get data
+
+. Create how many time past from start query to end of query and how many data miss
+
 . Create Chart of 1 minutes
+
 . Create 5 minutes data function
 . Create 15 minutes data function
 . Create 30 minutes data function
@@ -40,4 +48,5 @@
 . Create Generator func for minus days from now.utc
 . I want to change firstTime and lastTime out of getData func and change get_data func
 . solve bug : double yield in days(min) method
-. Create 1min 24h data for 2 or more days with generators
+. Create 1min 24h data for any days with generators
+. Create now 1 minute data giver

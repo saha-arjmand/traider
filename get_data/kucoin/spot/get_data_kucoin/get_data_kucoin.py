@@ -1,6 +1,7 @@
 from traider.utils.time.time import Calculate_time
 from traider.get_data.kucoin.spot.url import CreateUrl
 from traider.database import database
+from traider.get_data.kucoin.spot.symbol.symbols import Symbols
 import requests
 import pandas as pd
 import numpy as np
@@ -15,8 +16,9 @@ class OneMinuteSpotData:
 
     """ In this Class Constructor if we set firstTime & lastTime Parameter then the
     number_of_candles parameters dont use in this Class"""
-    def __init__(self, number_of_candles=1, firstTime=0, lastTime=0):
+    def __init__(self, symbol, number_of_candles=1, firstTime=0, lastTime=0):
         self.number_of_candles = number_of_candles
+        self.symbol = symbol
         self.firstTime = firstTime
         self.lastTime = lastTime
 
@@ -25,26 +27,38 @@ class OneMinuteSpotData:
 
         firstTime = self.firstTime
         lastTime = self.lastTime
+        symbol = self.symbol
 
-        if firstTime == 0 and lastTime == 0:
+        # Create obj from Symbol Class to check symbol is correct
+        symbolObj = Symbols()
+        # if check symbol is true then start create the url for request
+        if symbolObj.check_symbol(symbol):
 
-            # this parameter send from constructor init method
-            number_of_candles = self.number_of_candles
+            if firstTime == 0 and lastTime == 0:
 
-            first_time = Calculate_time.firstTime - (number_of_candles - 1) * 60
-            last_time = Calculate_time.lastTime
-            url = CreateUrl.URL(last_time, first_time, "BTC-USDT", "1min")
-            response = requests.get(url=url)
+                # this parameter send from constructor init method
+                number_of_candles = self.number_of_candles
 
+                first_time = Calculate_time.firstTime - (number_of_candles - 1) * 60
+                last_time = Calculate_time.lastTime
+                url = CreateUrl.URL(last_time, first_time, symbol, "1min")
+                response = requests.get(url=url)
+
+            else:
+                '''
+                in this part of if statement we dont need to candlesNumber and we create link with
+                first and last time parameters
+                '''
+                first_Time = self.firstTime
+                last_Time = self.lastTime
+                url = CreateUrl.URL(last_Time, firstTime, "BTC-USDT", "1min")
+                response = requests.get(url=url)
+
+        # else if the symbol not correct
         else:
-            '''
-            in this part of if statement we dont need to candlesNumber and we create link with
-            first and last time parameters
-            '''
-            first_Time = self.firstTime
-            last_Time = self.lastTime
-            url = CreateUrl.URL(last_Time, firstTime, "BTC-USDT", "1min")
-            response = requests.get(url=url)
+            print("the symbol not correct !")
+
+
 
         ''' in this part of code we sure that the response from KUCOIN API get back
          if this code we dont back status code 200 the code repeat again'''
@@ -163,11 +177,9 @@ class OneMinuteSpotData:
             yield self.data_sorting()
 
 
-dataObj = OneMinuteSpotData()
-data = dataObj.one_min_past_24h_data(2)
-# print(data)
-for anyItem in data:
-    print(anyItem)
+dataObj = OneMinuteSpotData("BTC-USDT")
+data = dataObj.get_data()
+print(data)
 
 
 

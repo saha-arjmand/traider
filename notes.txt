@@ -1,12 +1,13 @@
  Todos
  --------------------------------
 
-. Create loop for http and TooManyRedirects errors for back data with time space
 . Create setting for try again factors
+
+. Create multi processing thread for sort data function
 
 . Create 1min next data in get data
 
-. Create Class of database (tables) separated for any coin's symbol
+
 
 . Create market symbols picker class
 . check if symbol in market symbols then start get data
@@ -15,6 +16,8 @@
 
 . Create Chart of 1 minutes
 
+
+. Create Class of database (tables) separated for any coin's symbol
 . Create 5 minutes data function
 . Create 15 minutes data function
 . Create 30 minutes data function
@@ -59,3 +62,4 @@
 . check database for one time column and replace data
 . try except for requests response & make stopwatch for get data func
 . Create log option for getData func
+. Create loop for http and TooManyRedirects errors for back data with time space

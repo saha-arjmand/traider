@@ -1,3 +1,5 @@
+import datetime
+
 from traider.utils.time.time import Calculate_time
 from traider.get_data.kucoin.spot.url import CreateUrl
 from traider.database import database
@@ -6,6 +8,8 @@ import requests
 import pandas as pd
 import numpy as np
 import time
+import threading
+import concurrent.futures
 
 # Option to display
 pd.set_option('display.max_columns', None)
@@ -65,43 +69,57 @@ class OneMinuteSpotData:
             # use from urlObj to create url
             url = urlObj.URL(last_Time, first_Time, symbol, "1min")
 
-        try:
-            response = requests.get(url=url)
+        while True:
+            try:
+                response = requests.get(url=url)
 
-            # add status code to log file
-            self.Log += f"Response request status code : {response.status_code}\n"
+                # add status code to log file
+                self.Log += f"Response request status code : {response.status_code}\n"
 
-            return response.json()['data']
+                return response.json()['data']
 
-        except requests.ConnectionError as e:
-            self.Log += "Connection Error: DNS failure or refused connection\n"
-            self.Log += f"Error text : {e} \n"
-            return "\nConnection Error: DNS failure or refused connection"
+            except requests.ConnectionError as e:
+                self.Log += "Connection Error: DNS failure or refused connection\n"
+                self.Log += f"Error text : {e} \n"
+                print("\nConnection Error: DNS failure or refused connection")
+                print("\nTry Again After 30 Seconds")
+                time.sleep(30)
+                print("\nTry Again...")
+                continue
 
-        except requests.HTTPError as e:
-            self.Log += "HTTP Error: event of the rare invalid HTTP response\n"
-            self.Log += f"Error text : {e} \n"
-            return "\nHTTP Error: event of the rare invalid HTTP response"
+            except requests.HTTPError as e:
+                self.Log += "HTTP Error: event of the rare invalid HTTP response\n"
+                self.Log += f"Error text : {e} \n"
+                print("\nHTTP Error: event of the rare invalid HTTP response")
 
-        except requests.Timeout as e:
-            self.Log += "Timeout Error: i must write loop code here per 5 time per 5 second\n"
-            self.Log += f"Error text : {e} \n"
-            return "\nTimeout Error: i must write loop code here per 5 time per 5 second"
+            except requests.Timeout as e:
+                self.Log += "Timeout Error \n"
+                self.Log += f"Error text : {e} \n"
+                print("\nTimeout Error ")
+                print("\nTry Again After 30 Seconds")
+                time.sleep(30)
+                print("\nTry Again...")
+                continue
 
-        except requests.TooManyRedirects as e:
-            self.Log += "Timeout Error: i must write loop code here per 5 time per 5 second\n"
-            self.Log += f"Error text : {e} \n"
-            return "\nTimeout Error: i must write loop code here per 5 time per 5 second"
+            except requests.TooManyRedirects as e:
+                self.Log += "TooManyRedirects Error\n"
+                self.Log += f"Error text : {e} \n"
+                print("\nTooManyRedirects Error")
+                time.sleep(30)
+                print("\nTry Again...")
+                continue
 
-        except Exception as e:
-            self.Log += "Unhandled Exception occurred \n"
-            self.Log += f"Error text : {e} \n"
-            return "\nUnhandled Exception occurred : "
+            except Exception as e:
+                self.Log += "Unhandled Exception occurred \n"
+                self.Log += f"Error text : {e} \n"
+                return "\nUnhandled Exception occurred : "
 
-        finally:
-            stopwatch_stop = time.perf_counter()
-            timePassed = round((stopwatch_stop - stopwatch_start), 3)
-            self.Log += f"Time passed : {timePassed} s\n"
+            finally:
+                stopwatch_stop = time.perf_counter()
+                timePassed = round((stopwatch_stop - stopwatch_start), 3)
+                self.Log += f"Time passed : {timePassed} s\n"
+
+
 
     '''done'''
     def convert_std_datetime(self):
@@ -217,21 +235,14 @@ class OneMinuteSpotData:
         pass
 
 
-# n, m = map(int, input().split())
-#
-# stopwatch_start = time.perf_counter()
-#
-# for i in range(n):
-#     t = int(input())
-#     if t % m == 0:
-#         print(t)
-#
-# stopwatch_stop = time.perf_counter()
-#
-# print("Elapsed time:", t1_stop, t1_start)
-# print("Elapsed time during the whole program in seconds: ", t1_stop - t1_start)
+'''
+###########################_Run_Area_###########################
+'''
 
-getDataObj = OneMinuteSpotData("BTC-USDT")
-data = getDataObj.get_data()
+
+obj = OneMinuteSpotData("BTC-USDT")
+data = obj.get_data()
 print(data)
-print(getDataObj.Log)
+
+
+

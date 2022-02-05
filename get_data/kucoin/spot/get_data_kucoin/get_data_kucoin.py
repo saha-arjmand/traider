@@ -14,6 +14,8 @@ pd.set_option('display.max_columns', None)
 # Get Data From API
 class OneMinuteSpotData:
 
+    Log = "\n"
+
     """ In this Class Constructor if we set firstTime & lastTime Parameter then the
         number_of_candles parameters dont use in this Class                         """
     def __init__(self, symbol, number_of_candles=1, firstTime=0, lastTime=0):
@@ -82,8 +84,10 @@ class OneMinuteSpotData:
             return "\nUnhandled Exception occurred : ", e
         finally:
             stopwatch_stop = time.perf_counter()
-            print(f"Elapsed time during the get data method in seconds: "
-                  f"{stopwatch_stop - stopwatch_start} s")
+
+            self.Log += "get data:\n"
+            self.Log += f"Time passed : {stopwatch_stop - stopwatch_start} s\n"
+            self.Log += f"Response request staus code : {response.status_code}\n"
 
     '''done'''
     def convert_std_datetime(self):
@@ -216,3 +220,4 @@ class OneMinuteSpotData:
 getDataObj = OneMinuteSpotData("BTC-USDT")
 data = getDataObj.get_data()
 print(data)
+print(getDataObj.Log)

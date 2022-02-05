@@ -1,7 +1,8 @@
  Todos
  --------------------------------
 
-. Create log option for getData func
+. Create loop for http and TooManyRedirects errors for back data with time space
+
 . Create 1min next data in get data
 
 . Create Class of database (tables) separated for any coin's symbol
@@ -56,3 +57,4 @@
 . recreate the database and tables
 . check database for one time column and replace data
 . try except for requests response & make stopwatch for get data func
+. Create log option for getData func

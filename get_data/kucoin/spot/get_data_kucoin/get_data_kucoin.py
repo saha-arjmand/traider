@@ -14,7 +14,7 @@ pd.set_option('display.max_columns', None)
 # Get Data From API
 class OneMinuteSpotData:
 
-    Log = "\n"
+    Log = "\nLogfile: \n\n"
 
     """ In this Class Constructor if we set firstTime & lastTime Parameter then the
         number_of_candles parameters dont use in this Class                         """
@@ -36,6 +36,7 @@ class OneMinuteSpotData:
         # Create stopWatch for Calculate how many time elapsed for this function
         stopwatch_start = time.perf_counter()
 
+        self.Log += "get data:\n"
         firstTime = self.firstTime
         lastTime = self.lastTime
         symbol = self.symbol
@@ -71,20 +72,35 @@ class OneMinuteSpotData:
             self.Log += f"Response request status code : {response.status_code}\n"
 
             return response.json()['data']
+
         except requests.ConnectionError as e:
+            self.Log += "Connection Error: DNS failure or refused connection\n"
+            self.Log += f"Error text : {e} \n"
             return "\nConnection Error: DNS failure or refused connection"
+
         except requests.HTTPError as e:
-            return "\nHTTP Error: event of the rare invalid HTTP response", e
+            self.Log += "HTTP Error: event of the rare invalid HTTP response\n"
+            self.Log += f"Error text : {e} \n"
+            return "\nHTTP Error: event of the rare invalid HTTP response"
+
         except requests.Timeout as e:
-            return "\nTimeout Error: i must write loop code here per 5 time per 5 second", e
+            self.Log += "Timeout Error: i must write loop code here per 5 time per 5 second\n"
+            self.Log += f"Error text : {e} \n"
+            return "\nTimeout Error: i must write loop code here per 5 time per 5 second"
+
         except requests.TooManyRedirects as e:
-            return "\nTimeout Error: i must write loop code here per 5 time per 5 second", e
+            self.Log += "Timeout Error: i must write loop code here per 5 time per 5 second\n"
+            self.Log += f"Error text : {e} \n"
+            return "\nTimeout Error: i must write loop code here per 5 time per 5 second"
+
         except Exception as e:
-            return "\nUnhandled Exception occurred : ", e
+            self.Log += "Unhandled Exception occurred \n"
+            self.Log += f"Error text : {e} \n"
+            return "\nUnhandled Exception occurred : "
+
         finally:
             stopwatch_stop = time.perf_counter()
             timePassed = round((stopwatch_stop - stopwatch_start), 3)
-            self.Log += "get data:\n"
             self.Log += f"Time passed : {timePassed} s\n"
 
     '''done'''

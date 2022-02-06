@@ -1,5 +1,3 @@
-import datetime
-
 from traider.utils.time.time import Calculate_time
 from traider.get_data.kucoin.spot.url import CreateUrl
 from traider.database import database
@@ -40,86 +38,123 @@ class OneMinuteSpotData:
         # Create stopWatch for Calculate how many time elapsed for this function
         stopwatch_start = time.perf_counter()
 
+        # Log save
         self.Log += "get data:\n"
+
         firstTime = self.firstTime
-        lastTime = self.lastTime
+        # anyWay i dont any Calculate for last Time item and it comes from CalcObj
+        lastTime = Calculate_time.lastTime
         symbol = self.symbol
 
-        # we Create urlObj for Create and use Url
+        # Create Objects from our classes
+        # url object: Create and use Url
         urlObj = CreateUrl()
+        # time object: for calculate time
+        timeObj = Calculate_time()
 
-        if firstTime == 0 and lastTime == 0:
+        # use from urlObj to create url
+        url = urlObj.URL(lastTime, firstTime, symbol, "1min")
 
-            # this parameter send from constructor init method
+        if firstTime == 0:
             number_of_candles = self.number_of_candles
+            firstTime = Calculate_time.firstTime - (number_of_candles - 1) * 60
+            url = urlObj.URL(lastTime, firstTime, symbol, "1min")
 
-            first_time = Calculate_time.firstTime - (number_of_candles - 1) * 60
-            last_time = Calculate_time.lastTime
+        # elif firstTime != 0:
+        #     '''
+        #     in this part of if statement we dont need to candlesNumber and we create link with
+        #     first and last time parameters
+        #     '''
+        #     first_Time = self.firstTime
 
-            # use from urlObj to create url
-            url = urlObj.URL(last_time, first_time, symbol, "1min")
-
-        else:
-            '''
-            in this part of if statement we dont need to candlesNumber and we create link with
-            first and last time parameters
-            '''
-            first_Time = self.firstTime
-            last_Time = self.lastTime
-            # use from urlObj to create url
-            url = urlObj.URL(last_Time, first_Time, symbol, "1min")
+        # Log (start)
+        print(f"\n-Log- init basic data in getData:\n")
+        self.Log += f"- init basic data in getData:\n"
+        logData = [[f"{timeObj.convert_second_to_utc_time(firstTime)} |",
+                    f"{timeObj.convert_second_to_utc_time(lastTime)} |",
+                    f"{symbol} |", f"{self.number_of_candles}"]]
+        logData2 = np.array(logData)
+        df = pd.DataFrame()
+        df["lastTime        "], df["firstTime        "], \
+            df["symbol   "], df["candle's number"] = logData2.T
+        print(f"{df} \n")
+        self.Log += f"{df} \n"
+        # Log (end)
 
         while True:
             try:
                 response = requests.get(url=url)
 
+                # Log (start)
                 # add status code to log file
+                print(f"Response request status code : {response.status_code}\n")
                 self.Log += f"Response request status code : {response.status_code}\n"
+                # Log (end)
 
                 return response.json()['data']
 
             except requests.ConnectionError as e:
+
+                # Log (start)
                 self.Log += "Connection Error: DNS failure or refused connection\n"
                 self.Log += f"Error text : {e} \n"
                 print("\nConnection Error: DNS failure or refused connection")
+                # Log(end)
+
                 print("\nTry Again After 30 Seconds")
                 time.sleep(30)
                 print("\nTry Again...")
                 continue
 
             except requests.HTTPError as e:
+
+                # Log (start)
                 self.Log += "HTTP Error: event of the rare invalid HTTP response\n"
                 self.Log += f"Error text : {e} \n"
                 print("\nHTTP Error: event of the rare invalid HTTP response")
+                # Log (end)
 
             except requests.Timeout as e:
+
+                # Log (start)
                 self.Log += "Timeout Error \n"
                 self.Log += f"Error text : {e} \n"
                 print("\nTimeout Error ")
+                # Log (end)
+
                 print("\nTry Again After 30 Seconds")
                 time.sleep(30)
                 print("\nTry Again...")
                 continue
 
             except requests.TooManyRedirects as e:
+
+                # Log (start)
                 self.Log += "TooManyRedirects Error\n"
                 self.Log += f"Error text : {e} \n"
                 print("\nTooManyRedirects Error")
+                # Log (end)
+
                 time.sleep(30)
                 print("\nTry Again...")
                 continue
 
             except Exception as e:
+
+                # Log (start)
                 self.Log += "Unhandled Exception occurred \n"
                 self.Log += f"Error text : {e} \n"
-                return "\nUnhandled Exception occurred : "
+                print("\nUnhandled Exception occurred : ")
+                # Log (end)
 
             finally:
                 stopwatch_stop = time.perf_counter()
                 timePassed = round((stopwatch_stop - stopwatch_start), 3)
-                self.Log += f"Time passed : {timePassed} s\n"
 
-
+                # Log (start)
+                self.Log += f"Time passed GetData: {timePassed} s\n"
+                print(f"Time passed getData: {timePassed} s\n")
+                # Log (end)
 
     '''done'''
     def convert_std_datetime(self):

@@ -1,23 +1,26 @@
  Todos
  --------------------------------
 
+. Check if we have print in get data _ data sorting func is working ?
 . Create setting for try again factors
-
+https://stackoverflow.com/questions/23294658/asking-the-user-for-input-until-they-give-a-valid-response
+. Better Log with create Log() function : if anything add to log print new log things
 . Create multi processing thread for sort data function
+. Create stopwatch for all getData method and complete log file
 
-. Create 1min next data in get data
-
-
+. Create 1min next data Class
+# this class should have 2 basic method :
+# thread 1 : get out last time in db and check with now time then save past time to db
+# thread 2 : Calculate next time and save data in db
 
 . Create market symbols picker class
 . check if symbol in market symbols then start get data
 
-. Create how many time past from start query to end of query and how many data miss
-
 . Create Chart of 1 minutes
 
-
 . Create Class of database (tables) separated for any coin's symbol
+
+. multi timeFrame data classes
 . Create 5 minutes data function
 . Create 15 minutes data function
 . Create 30 minutes data function

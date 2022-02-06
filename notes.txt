@@ -1,12 +1,11 @@
  Todos
  --------------------------------
 
-. Check if we have print in get data _ data sorting func is working ?
 . Create setting for try again factors
 https://stackoverflow.com/questions/23294658/asking-the-user-for-input-until-they-give-a-valid-response
 . Better Log with create Log() function : if anything add to log print new log things
 . Create multi processing thread for sort data function
-. Create stopwatch for all getData method and complete log file
+. add Log on/off to setting file
 
 . Create 1min next data Class
 # this class should have 2 basic method :
@@ -66,3 +65,5 @@ https://stackoverflow.com/questions/23294658/asking-the-user-for-input-until-the
 . try except for requests response & make stopwatch for get data func
 . Create log option for getData func
 . Create loop for http and TooManyRedirects errors for back data with time space
+. Check if we have print in get data _ data sorting func is working ? yes
+. Create stopwatch for all getData method and complete log file

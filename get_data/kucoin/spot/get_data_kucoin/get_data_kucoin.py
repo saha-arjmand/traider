@@ -14,16 +14,16 @@ pd.set_option('display.max_columns', None)
 
 
 # Get Data From API
-class OneMinuteSpotData:
+class pastData:
 
     Log = "\nLogfile: \n\n"
 
     """ In this Class Constructor if we set firstTime & lastTime Parameter then the
         number_of_candles parameters dont use in this Class                         """
-    def __init__(self, symbol, number_of_candles=1, firstTime=0, lastTime=0):
+    def __init__(self, symbol, firstTime=0, lastTime=0, number_of_candles=1):
 
         # check type of integer values is int
-        if (type(number_of_candles) | type(firstTime) | type(lastTime)) is int:
+        if (type(number_of_candles | firstTime | lastTime)) is int:
             self.number_of_candles = number_of_candles
             self.firstTime = firstTime
             self.lastTime = lastTime
@@ -33,7 +33,7 @@ class OneMinuteSpotData:
             self.symbol = symbol
 
     '''done'''
-    def get_data(self):
+    def getData(self):
 
         # Create stopWatch for Calculate how many time elapsed for this function
         stopwatch_start = time.perf_counter()
@@ -41,9 +41,8 @@ class OneMinuteSpotData:
         # Log save
         self.Log += "get data:\n"
 
-        firstTime = self.firstTime
         # anyWay i dont any Calculate for last Time item and it comes from CalcObj
-        lastTime = Calculate_time.lastTime
+
         symbol = self.symbol
 
         # Create Objects from our classes
@@ -52,22 +51,20 @@ class OneMinuteSpotData:
         # time object: for calculate time
         timeObj = Calculate_time()
 
-        # use from urlObj to create url
-        url = urlObj.URL(lastTime, firstTime, symbol, "1min")
-
-        if firstTime == 0:
+        if self.firstTime == 0:
             number_of_candles = self.number_of_candles
+            lastTime = Calculate_time.lastTime
             firstTime = Calculate_time.firstTime - (number_of_candles - 1) * 60
             url = urlObj.URL(lastTime, firstTime, symbol, "1min")
-
-        # elif firstTime != 0:
-        #     '''
-        #     in this part of if statement we dont need to candlesNumber and we create link with
-        #     first and last time parameters
-        #     '''
-        #     first_Time = self.firstTime
+        else:
+            firstTime = self.firstTime
+            lastTime = self.lastTime
+            # use from urlObj to create url
+            url = urlObj.URL(lastTime, firstTime, symbol, "1min")
 
         # Log (start)
+        print(f"this getData firs time : {timeObj.convert_second_to_utc_time(firstTime)}")
+        print(f"this getData last time : {timeObj.convert_second_to_utc_time(lastTime)}")
         print(f"\n-Log- init basic data in getData:\n")
         self.Log += f"- init basic data in getData:\n"
         logData = [[f"{timeObj.convert_second_to_utc_time(firstTime)} |",
@@ -75,7 +72,7 @@ class OneMinuteSpotData:
                     f"{symbol} |", f"{self.number_of_candles}"]]
         logData2 = np.array(logData)
         df = pd.DataFrame()
-        df["lastTime        "], df["firstTime        "], \
+        df["firstTime        "], df["lastTime        "], \
             df["symbol   "], df["candle's number"] = logData2.T
         print(f"{df} \n")
         self.Log += f"{df} \n"
@@ -148,23 +145,25 @@ class OneMinuteSpotData:
                 # Log (end)
 
             finally:
-                stopwatch_stop = time.perf_counter()
-                timePassed = round((stopwatch_stop - stopwatch_start), 3)
 
                 # Log (start)
+                stopwatch_stop = time.perf_counter()
+                timePassed = round((stopwatch_stop - stopwatch_start), 3)
                 self.Log += f"Time passed GetData: {timePassed} s\n"
                 print(f"Time passed getData: {timePassed} s\n")
                 # Log (end)
 
     '''done'''
-    def convert_std_datetime(self):
+    def organizeData(self):
+
+        stopwatch_start = time.perf_counter()
 
         # Convert list obj to numpy array 2D obj
-        data = np.array(self.get_data())
+        data = np.array(self.getData())
 
         finalList = list()
         i = 0
-        calcobj = Calculate_time()
+        calcObj = Calculate_time()
 
         # i must iterate the items in the array and change time column
         for anyItem in data:
@@ -173,18 +172,18 @@ class OneMinuteSpotData:
 
             # DateTime
             # 2 : i want a uniq field for create primary key in our database and it's datetime seconds
-            id = int(data[i, 0])
+            dataId = int(data[i, 0])
 
             # Date
             # 3 : Gain date from convert first column (seconds) to std uts date
-            dateInfo = calcobj.convert_second_to_utc_time(int(data[i, 0])).date()
+            dateInfo = calcObj.convert_second_to_utc_time(int(data[i, 0])).date()
 
             # Time
             # 4 : Gain time from convert first column (seconds) to std uts time
-            timeInfo = calcobj.convert_second_to_utc_time(int(data[i, 0])).time()
+            timeInfo = calcObj.convert_second_to_utc_time(int(data[i, 0])).time()
 
             # 5 : add datetime that extract in step 2 to final array
-            fullData1 = np.insert(dataInfo, 0, id, axis=0)
+            fullData1 = np.insert(dataInfo, 0, dataId, axis=0)
 
             # 6 : add date that extract in step 2 to final array
             fullData2 = np.insert(fullData1, 1, dateInfo, axis=0)
@@ -203,11 +202,21 @@ class OneMinuteSpotData:
 
         final = np.array(finalList)
 
+        # Log (start)
+        stopwatch_stop = time.perf_counter()
+        timePassed = round((stopwatch_stop - stopwatch_start), 3)
+        self.Log += f"Time passed organizeData: {timePassed} s\n"
+        print(f"Time passed organizeData: {timePassed} s\n")
+        # Log (end)
+
         return final
 
     '''done'''
-    def data_sorting(self):
-        data = self.convert_std_datetime()
+    def frameData(self):
+
+        stopwatch_start = time.perf_counter()
+
+        data = self.organizeData()
 
         df = pd.DataFrame()
         df["id"], df["date"], df["time"], df["symbol"], df["open"], df["close"], \
@@ -215,59 +224,98 @@ class OneMinuteSpotData:
 
         # this code set time column to our index dataframe
         # df.set_index('time', inplace=True)
+
+        # Log (start)
+        stopwatch_stop = time.perf_counter()
+        timePassed = round((stopwatch_stop - stopwatch_start), 3)
+        self.Log += f"Time passed frameData: {timePassed} s\n"
+        print(f"Time passed frameData: {timePassed} s\n")
+        # Log (end)
+
         return df
 
     '''done'''
-    def save_data_db(self, data):
+    def dayData(self):
 
-        tableName = "spotdata"
-        db = database.DataBase()
-        db.savedb(data, tableName)
-
-    '''done'''
-    def allDay_candles(self):
+        stopwatch_start = time.perf_counter()
 
         # first we create a object from time Class for convert time
-        calctime = Calculate_time()
+        calcTime = Calculate_time()
 
         # Today data : in below code we calculate today code
-        todayLastTime = calctime.convert_second_to_utc_time(calctime.lastTime)
+        todayLastTime = calcTime.convert_second_to_utc_time(calcTime.lastTime)
         TodayLastTime_hour = todayLastTime.hour
         TodayLastTime_minute = todayLastTime.minute
+
+        # Log (start)
+        self.Log += f"- dayData lastTime :{todayLastTime}\n"
+        print(f"\n- dayData lastTime :{todayLastTime}")
+        # Log (end)
+
         # total past minute in today is totalTimePastToday
         totalTimePast = ((TodayLastTime_hour * 60) + TodayLastTime_minute)
         # So just we equal number_of_candles to this totalTimePastToday obj
         # base totalTimePast is number of Today minutes
         self.number_of_candles = totalTimePast
-        print("this is today data")
-        return self.data_sorting()
 
-    '''this function one_min_past_24h_data has 2 yield and one yield is for today data
+        # Log (start)
+        self.Log += f"total candle's number in dayData is : {totalTimePast}\n"
+        print(f"\ntotal candle's number in dayData is : {totalTimePast}")
+
+        stopwatch_stop = time.perf_counter()
+        timePassed = round((stopwatch_stop - stopwatch_start), 3)
+        self.Log += f"Time passed dayData: {timePassed} s\n"
+        print(f"Time passed dayData: {timePassed} s\n")
+        # Log (end)
+
+        return self.frameData()
+
+    '''this function daysData has 2 yield and one yield is for today data
         and second yield is for other days yield data and show data to dataframe model'''
-    def one_min_past_24h_data(self, daysNumber=1):
+    def daysData(self, daysNumber=1):
+
+        stopwatch_start = time.perf_counter()
+
         # Today data
-        yield self.allDay_candles()
+        yield self.dayData()
 
         # first we create a object from time Class for convert time
-        calctime = Calculate_time()
-
-        timespan = calctime.pastDay_datetime(daysNumber)
+        calcObj = Calculate_time()
+        timespan = calcObj.pastDay(daysNumber)
 
         for anyItem in timespan:
-            # first we calculate lastTime
+            first_Time = anyItem[0]
             last_Time = anyItem[1]
-            # then we minus a day's seconds from last time to calculate firstTime
-            first_Time = last_Time - (24 * 60 * 60)
 
-            # then we replace it with first & last time in our getData
+            # replace it with first & last time in our getData
             self.firstTime = first_Time
             self.lastTime = last_Time
-            print("this is next day data")
-            yield self.data_sorting()
 
-    ''' working '''
-    def next_one_min_data(self):
-        pass
+            # Log (start)
+            print("this is next day data")
+            print(f"this days firsttime: {calcObj.convert_second_to_utc_time(self.firstTime)}")
+            print(f"this days lasttime: {calcObj.convert_second_to_utc_time(self.lastTime)}")
+            # Log (end)
+
+            yield self.frameData()
+
+        # Log (start)
+        stopwatch_stop = time.perf_counter()
+        timePassed = round((stopwatch_stop - stopwatch_start), 3)
+        self.Log += f"Time passed days data: {timePassed} s\n"
+        print(f"Time passed days data: {timePassed} s\n")
+        # Log (end)
+
+    '''done'''
+    def saveData(self, data):
+
+        tableName = "spotdata"
+        db = database.DataBase()
+        db.savedb(data, tableName)
+
+
+class nextData:
+    pass
 
 
 '''
@@ -275,9 +323,12 @@ class OneMinuteSpotData:
 '''
 
 
-obj = OneMinuteSpotData("BTC-USDT")
-data = obj.get_data()
-print(data)
+obj = pastData("BTC-USDT")
+
+# data5 = obj.daysData(2)
+# for anyItem1 in data5:
+#     print(anyItem1)
+
 
 
 

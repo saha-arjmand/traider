@@ -20,13 +20,13 @@ class Calculate_time:
         std_time = datetime.utcfromtimestamp(seconds)
         return std_time
 
-    def pastDay_datetime(self, daysNumber=0):
-        toDay = self.current_utc_date0
+    def pastDay(self, n):
+
         i = 0
-        while i < daysNumber:
-            minusDay = toDay - timedelta(days=i)
-            minusSeconds = self.convert_date_to_seconds(minusDay)
-            yield minusDay, minusSeconds
+        while i < n:
+            toDay = self.current_utc_date0
+            toDaySeconds = self.convert_date_to_seconds(toDay)
+            lastTimeSeconds = toDaySeconds - (24*60*60*i)
+            firstTimeSeconds = toDaySeconds - (24*60*60*(i+1))
+            yield firstTimeSeconds, lastTimeSeconds
             i += 1
-
-

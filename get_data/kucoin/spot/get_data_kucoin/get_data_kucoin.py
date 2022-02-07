@@ -78,7 +78,9 @@ class pastData:
         self.Log += f"{df} \n"
         # Log (end)
 
-        while True:
+        i = 0
+        numberOfTry = 5
+        while i <= numberOfTry:
             try:
                 response = requests.get(url=url)
 
@@ -98,8 +100,8 @@ class pastData:
                 print("\nConnection Error: DNS failure or refused connection")
                 # Log(end)
 
-                print("\nTry Again After 30 Seconds")
-                time.sleep(30)
+                print(f"\nTry Again(number{i}) After 30 Seconds")
+                time.sleep(5)
                 print("\nTry Again...")
                 continue
 
@@ -152,6 +154,8 @@ class pastData:
                 self.Log += f"Time passed GetData: {timePassed} s\n"
                 print(f"Time passed getData: {timePassed} s\n")
                 # Log (end)
+
+        i += 1
 
     '''done'''
     def organizeData(self):
@@ -307,11 +311,12 @@ class pastData:
         # Log (end)
 
     '''done'''
-    def saveData(self, data):
+    @staticmethod
+    def saveData(data):
 
         tableName = "spotdata"
         db = database.DataBase()
-        db.savedb(data, tableName)
+        db.saveDb(data, tableName)
 
 
 class nextData:
@@ -325,9 +330,12 @@ class nextData:
 
 obj = pastData("BTC-USDT")
 
-# data5 = obj.daysData(2)
-# for anyItem1 in data5:
-#     print(anyItem1)
+data5 = obj.daysData(0)
+for anyItem1 in data5:
+    print(anyItem1)
+    obj.saveData(anyItem1)
+
+
 
 
 

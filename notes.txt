@@ -1,6 +1,7 @@
  Todos
  --------------------------------
 
+. How i can create loop for 5 time
 . Create setting for try again factors
 https://stackoverflow.com/questions/23294658/asking-the-user-for-input-until-they-give-a-valid-response
 . Better Log with create Log() function : if anything add to log print new log things

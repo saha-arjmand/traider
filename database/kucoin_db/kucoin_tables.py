@@ -1,9 +1,10 @@
+import sqlalchemy.orm
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Date, Time, Float, Integer, String
-import os
 from traider.database import secrets
 import pymysql
 from sqlalchemy import create_engine
+from sqlalchemy.orm.exc import NoResultFound
 
 Base = declarative_base()
 
@@ -23,21 +24,25 @@ my_conn = create_engine(
     amount float
 """
 
+
 class kucoinSpotDataOneMin(Base):
     __tablename__ = 'spotdata'
-    id = Column(Integer(), primary_key=True)
-    date = Column(Date(), nullable=False)
-    time = Column(Time(), nullable=False)
+    id = Column(Integer, primary_key=True)
+    date = Column(Date, nullable=False)
+    time = Column(Time, nullable=False)
     symbol = Column(String(32), nullable=False)
-    open = Column(Float(), nullable=False)
-    close = Column(Float(), nullable=False)
-    high = Column(Float(), nullable=False)
-    low = Column(Float(), nullable=False)
-    volume = Column(Float(), nullable=False)
-    amount = Column(Float(), nullable=False)
+    open = Column(Float, nullable=False)
+    close = Column(Float, nullable=False)
+    high = Column(Float, nullable=False)
+    low = Column(Float, nullable=False)
+    volume = Column(Float, nullable=False)
+    amount = Column(Float, nullable=False)
 
     def __repr__(self):
         return f"<kucoinSpotDataOneMin date={self.date} time={self.time} close={self.close}>"
 
 
 Base.metadata.create_all(my_conn)
+
+
+# end

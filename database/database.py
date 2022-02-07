@@ -55,12 +55,19 @@ class DataBase:
         if self.isExist_db():
 
             # this Prevents duplicate data storage in the database
+            errorNumber = 0
             for i in range(len(df)):
                 try:
                     df.iloc[i:i + 1].to_sql(name=tableName, if_exists='append', con=kucoin_tables.my_conn, index=False)
                     print(f"save data {i} to databases")
                 except exc.IntegrityError as e:
-                    print(f"Error when save data : {e}")
+
+                    # if the error of this prevents duplicate more than 5 Stop
+
+                    print(f"Error {errorNumber} when save data : {e}")
+                    if errorNumber > 4:
+                        break
+                    errorNumber += 1
 
         else:
             print("database not found !")

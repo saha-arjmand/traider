@@ -6,7 +6,6 @@ import requests
 import pandas as pd
 import numpy as np
 import time
-import threading
 import concurrent.futures
 
 # Option to display

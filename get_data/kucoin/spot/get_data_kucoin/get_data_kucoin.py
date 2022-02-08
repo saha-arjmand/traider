@@ -318,6 +318,21 @@ class pastData:
         db = database.DataBase()
         db.saveDb(data, tableName)
 
+    ''' this function get data collection and save their in db with open thread for each data'''
+    def saveData_speed(self, data):
+
+        stopwatch_start = time.perf_counter()
+
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            executor.map(self.saveData, data)
+
+        # Log (start)
+        stopwatch_stop = time.perf_counter()
+        timePassed = round((stopwatch_stop - stopwatch_start), 3)
+        self.Log += f"Time passed saveData_speed : {timePassed} s\n"
+        print(f"Time passed saveData_speed: {timePassed} s\n")
+        # Log (end)
+
 
 class nextData:
     pass
@@ -330,10 +345,12 @@ class nextData:
 
 obj = pastData("BTC-USDT")
 
-data5 = obj.daysData(0)
-for anyItem1 in data5:
-    print(anyItem1)
-    obj.saveData(anyItem1)
+data5 = obj.daysData(1)
+obj.saveData_speed(data5)
+
+
+
+
 
 
 

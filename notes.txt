@@ -1,13 +1,11 @@
  Todos
  --------------------------------
 
-. Create multiprocessing thread for daysData func
 . add Log on/off to setting file
 . How i can create loop for 5 time
 . Create setting for try again factors
 https://stackoverflow.com/questions/23294658/asking-the-user-for-input-until-they-give-a-valid-response
 . Better Log with create Log() function : if anything add to log print new log things
-
 
 
 . Create 1min next data Class
@@ -71,3 +69,4 @@ https://stackoverflow.com/questions/23294658/asking-the-user-for-input-until-the
 . Check if we have print in get data _ data sorting func is working ? yes
 . Create stopwatch for all getData method and complete log file
 . if pymysql.err.IntegrityError is more than 5 stop while (break)
+. Create saveData_speed method with multiprocessing thread in getData.cls

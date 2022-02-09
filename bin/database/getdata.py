@@ -6,7 +6,7 @@ getDataObj = pastData("BTC-USDT")
 
 """ Past Data"""
 # 1: we give past data and save in db
-past = getDataObj.daysData(3)
+past = getDataObj.daysData(10)
 for anything in past:
     print(anything)
     getDataObj.saveData_speed(past)
@@ -18,6 +18,9 @@ print(now[0])
 getDataObj.saveData(now[0])
 
 """ Next Data """
-
+nextData = getDataObj.nextData()
+for anyNextData in nextData:
+    print(anyNextData)
+    getDataObj.saveData(anyNextData)
 
 # end

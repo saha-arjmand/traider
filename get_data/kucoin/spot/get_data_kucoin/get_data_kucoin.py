@@ -429,47 +429,67 @@ class pastData:
         self.lastTime = lastDateTime_seconds
 
         """ return df from our data"""
-        return self.frameData(), lastDateTime
+        return self.frameData(), lastDateTime_seconds
 
     '''working'''
     def nextData(self):
 
-        pass
+        """ Create time object to calc time """
+        timeObj = Calculate_time()
 
+        """ Calculate first time to start get data """
+        startTime = self.firstNextData()[1]
 
+        # Log (start)
+        print(f"\nnextData :")
+        self.Log += f"\nnextData :"
 
+        print(f"start time is : {timeObj.convert_second_to_utc_time(startTime)}")
+        self.Log += f"start time is : {timeObj.convert_second_to_utc_time(startTime)}"
+        # Log (end)
 
+        while True:
+            """ Calculate current time for check firstTime """
+            currentTime = datetime.datetime.utcnow()
 
+            """ i must set zero to second to calculate firstTime"""
+            firstTime = currentTime.replace(currentTime.year, currentTime.month, currentTime.day,
+                                            currentTime.hour, currentTime.minute, 0, 0)
 
+            firstTime_seconds = timeObj.convert_date_to_seconds(firstTime)
 
+            """ Calculate second to end of this minute and wait """
+            seconds = 60 - currentTime.second
 
+            # Log (start)
+            print(f"current time is : {currentTime}")
+            self.Log += f"current time is : {currentTime}"
 
-class NextData:
-    pass
+            print(f"first time is : {firstTime}")
+            self.Log += f"first time is : {firstTime}"
 
+            print(f"sleep(wait) for {seconds} s")
+            self.Log += f"sleep(wait) for {seconds} s"
+            # Log (end)
 
+            time.sleep(seconds)
 
+            # when sleep is done we calculate last time
+            lastTime = datetime.datetime.utcnow()
+            lastTime_seconds = timeObj.convert_date_to_seconds(lastTime)
 
+            """ replace the first and last time """
 
+            self.firstTime = firstTime_seconds
+            self.lastTime = lastTime_seconds
 
-
-
+            yield self.frameData()
 
 
 '''
 ###########################_Run_Area_###########################
 '''
 
-
-obj = pastData("BTC-USDT")
-data1 = obj.firstNextData()
-print(data1)
-
-
-
-# data2 = obj.daysData(0)
-# for anyItem1 in data2:
-#     print(anyItem1)
 
 
 

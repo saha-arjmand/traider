@@ -278,6 +278,21 @@ class pastData:
 
         return self.frameData()
 
+    '''done'''
+    def lastData_dayData(self):
+
+        """get the last Datetime from dayData df"""
+        lastTime = self.dayData().iloc[0, 2]
+        lastDate = self.dayData().iloc[0, 1]
+        fullTime = f"{lastDate} {lastTime}"
+        date_time_obj = datetime.datetime.strptime(fullTime, '%Y-%m-%d %H:%M:%S')
+
+        """Convert date_time_obj to seconds"""
+        timeObj = Calculate_time()
+        lastData = timeObj.convert_date_to_seconds(date_time_obj)
+
+        return lastData
+
     '''this function daysData has 2 yield and one yield is for today data
         and second yield is for other days yield data and show data to dataframe model'''
     def daysData(self, daysNumber=1):
@@ -342,46 +357,20 @@ class pastData:
         # first we sync today data again for sure that the today data is complete
         self.saveData_speed(self.daysData(0))
 
-    '''working'''
+    '''done'''
     def firstNextData(self):
 
         """Create time object for calculate time"""
         timeObj = Calculate_time()
 
         """Calculate first time"""
-        # first time is that time program run and get past data
-        startTime = self.startTime.time()
-
-        # for sure that we get all the time from api , we minus first time with 3 minutes
-        if startTime.minute >= 3:
-            firstTime_hour = startTime.hour
-            firstTime_minute = startTime.minute - 3
-
-        else:
-            firstTime_hour = startTime.hour - 1
-            firstTime_minute = (startTime.minute + 60) - 3
-
-        # so i create new first Date Time with new minute and set seconds to zero
-        firstDateTime = self.startTime.replace(self.startTime.year, self.startTime.month, self.startTime.day,
-                                               firstTime_hour, firstTime_minute, 0, 0)
-
-        # we need firstTime to second so use timeObj to convert this
-        firstDateTime_seconds = timeObj.convert_date_to_seconds(firstDateTime)
+        firstTime_seconds = self.lastData_dayData()
 
         # Log (start)
-        self.Log += "firstNextData log"
-
-        print("Calculate firstTime")
-        self.Log += "Calculate firstTime"
-
-        print(f"startTime of request : {startTime}")
-        self.Log += f"startTime of request : {startTime}"
-
-        print(f"firstDateTime with minus 3 minute is : {firstDateTime}")
-        self.Log += f"firstTime with minus 3 minute is : {firstDateTime}"
-
-        print(f"Seconds of the firstDateTime is : {firstDateTime_seconds}")
-        self.Log += f"Seconds of the firstDateTime is : {firstDateTime_seconds}"
+        print("\nfirstNextData")
+        self.Log += "\nfirstNextData"
+        print(f"firstTime is : {timeObj.convert_second_to_utc_time(firstTime_seconds)}")
+        self.Log += f"firstTime is : {timeObj.convert_second_to_utc_time(firstTime_seconds)}"
         # Log (end)
 
         """Calculate last time"""
@@ -436,19 +425,17 @@ class pastData:
 
         """ Set firstTime & lastTime to the init class """
         # we must set firstTime and lastTime to the cls parameters
-        self.firstTime = firstDateTime_seconds
+        self.firstTime = firstTime_seconds
         self.lastTime = lastDateTime_seconds
 
-        """ yield df from our data"""
+        """ return df from our data"""
         return self.frameData(), lastDateTime
 
     '''working'''
     def nextData(self):
-        # todo : i must read data from db and if the data is exist in there calc some thing
+
         pass
 
-    def test(self):
-        query="SELECT * FROM spotdata WHERE "
 
 
 
@@ -476,10 +463,8 @@ class NextData:
 
 obj = pastData("BTC-USDT")
 data1 = obj.firstNextData()
-print(data1[1])
+print(data1)
 
-print("\n\n\nthis is next ")
-print(data1[0])
 
 
 # data2 = obj.daysData(0)

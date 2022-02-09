@@ -4,13 +4,20 @@ from traider.get_data.kucoin.spot.get_data_kucoin import pastData
 
 getDataObj = pastData("BTC-USDT")
 
+""" Past Data"""
 # 1: we give past data and save in db
-past = getDataObj.daysData(10)
+past = getDataObj.daysData(3)
 for anything in past:
     print(anything)
     getDataObj.saveData_speed(past)
 
-# 2: we sync today data for miss today data
-getDataObj.syncPastData()
+""" Now Data """
+# 2: Complete next today data to now
+now = getDataObj.firstNextData()
+print(now[0])
+getDataObj.saveData(now[0])
+
+""" Next Data """
+
 
 # end

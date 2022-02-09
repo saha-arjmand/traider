@@ -1,21 +1,9 @@
 alpha
  --------------------------------
-. Create 1 min next time with for and wait with last_currentTime
-. git commit and push to github
-. cp project and files to H.D.D
-. setup ubunto from laptop
-. setup pycharm linux + python
-. setup mysql linux
-. lunch project in ubunto
-. git commit project in linux (travel to linux)
-. learning bash script
-. bash start 2 part of project sync...
 
-. set id to index
-. Create 1min next data Class
-# this class should have 2 basic method :
-# thread 1 : get out last time in db and check with now time then save past time to db
-# thread 2 : Calculate next time and save data in db
+. clean log and create setting
+. fix bug getData
+
 
 . Create loading db class that check db is existed and past and next data save
 
@@ -87,3 +75,7 @@ Done
 . Create stopwatch for all getData method and complete log file
 . if pymysql.err.IntegrityError is more than 5 stop while (break)
 . Create saveData_speed method with multiprocessing thread in getData.cls
+. Create 1 min next time with for and wait with last_currentTime
+# this class should have 2 basic method :
+# thread 1 : get out last time in db and check with now time then save past time to db
+# thread 2 : Calculate next time and save data in db

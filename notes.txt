@@ -1,17 +1,25 @@
- Todos
+alpha
  --------------------------------
+. Create 1 min next time with for and wait with last_currentTime
+. git commit and push to github
+. cp project and files to H.D.D
+. setup ubunto from laptop
+. setup pycharm linux + python
+. setup mysql linux
+. lunch project in ubunto
+. git commit project in linux (travel to linux)
+. learning bash script
+. bash start 2 part of project sync...
 
-. add Log on/off to setting file
-. How i can create loop for 5 time
-. Create setting for try again factors
-https://stackoverflow.com/questions/23294658/asking-the-user-for-input-until-they-give-a-valid-response
-. Better Log with create Log() function : if anything add to log print new log things
-
-
+. set id to index
 . Create 1min next data Class
 # this class should have 2 basic method :
 # thread 1 : get out last time in db and check with now time then save past time to db
 # thread 2 : Calculate next time and save data in db
+
+. Create loading db class that check db is existed and past and next data save
+
+. add timeframe to getData class
 
 . Create market symbols picker class
 . check if symbol in market symbols then start get data
@@ -28,8 +36,17 @@ https://stackoverflow.com/questions/23294658/asking-the-user-for-input-until-the
 . create 4 hour data function
 . create 1 day data function
 
+Beta
+--------------------------------
+. add Log on/off to setting file
+. How i can create loop for 5 time
+. Create setting for try again factors
+https://stackoverflow.com/questions/23294658/asking-the-user-for-input-until-they-give-a-valid-response
+. Better Log with create Log() function : if anything add to log print new log things
+
+
  --------------------------------
- انجام شده
+Done
  --------------------------------
 . کلاس بندی کردن و فلدر بندی کردن کدها
 . ایجاد کردن زمان حال به زمان گرینویچ

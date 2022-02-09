@@ -1,3 +1,5 @@
+import datetime
+
 from traider.utils.time.time import Calculate_time
 from traider.get_data.kucoin.spot.url import CreateUrl
 from traider.database import database
@@ -16,6 +18,9 @@ pd.set_option('display.max_columns', None)
 class pastData:
 
     Log = "\nLogfile: \n\n"
+
+    # when create obj from cls we create startTime
+    startTime = datetime.datetime.utcnow()
 
     """ In this Class Constructor if we set firstTime & lastTime Parameter then the
         number_of_candles parameters dont use in this Class                         """
@@ -318,12 +323,12 @@ class pastData:
         db.saveDb(data, tableName)
 
     ''' this function get data collection and save their in db with open thread for each data'''
-    def saveData_speed(self, data):
+    def saveData_speed(self, dataList):
 
         stopwatch_start = time.perf_counter()
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(self.saveData, data)
+            executor.map(self.saveData, dataList)
 
         # Log (start)
         stopwatch_stop = time.perf_counter()
@@ -332,9 +337,136 @@ class pastData:
         print(f"Time passed saveData_speed: {timePassed} s\n")
         # Log (end)
 
+    '''done'''
+    def syncPastData(self):
+        # first we sync today data again for sure that the today data is complete
+        self.saveData_speed(self.daysData(0))
 
-class nextData:
+    '''working'''
+    def firstNextData(self):
+
+        """Create time object for calculate time"""
+        timeObj = Calculate_time()
+
+        """Calculate first time"""
+        # first time is that time program run and get past data
+        startTime = self.startTime.time()
+
+        # for sure that we get all the time from api , we minus first time with 3 minutes
+        if startTime.minute >= 3:
+            firstTime_hour = startTime.hour
+            firstTime_minute = startTime.minute - 3
+
+        else:
+            firstTime_hour = startTime.hour - 1
+            firstTime_minute = (startTime.minute + 60) - 3
+
+        # so i create new first Date Time with new minute and set seconds to zero
+        firstDateTime = self.startTime.replace(self.startTime.year, self.startTime.month, self.startTime.day,
+                                               firstTime_hour, firstTime_minute, 0, 0)
+
+        # we need firstTime to second so use timeObj to convert this
+        firstDateTime_seconds = timeObj.convert_date_to_seconds(firstDateTime)
+
+        # Log (start)
+        self.Log += "firstNextData log"
+
+        print("Calculate firstTime")
+        self.Log += "Calculate firstTime"
+
+        print(f"startTime of request : {startTime}")
+        self.Log += f"startTime of request : {startTime}"
+
+        print(f"firstDateTime with minus 3 minute is : {firstDateTime}")
+        self.Log += f"firstTime with minus 3 minute is : {firstDateTime}"
+
+        print(f"Seconds of the firstDateTime is : {firstDateTime_seconds}")
+        self.Log += f"Seconds of the firstDateTime is : {firstDateTime_seconds}"
+        # Log (end)
+
+        """Calculate last time"""
+        # finish time is now when the method is started
+        finishTime = datetime.datetime.utcnow().time()
+
+        # i should wait to finish time goes next minute so i create remaining time
+        finishTime_seconds = finishTime.second
+        remainingTime = 60 - finishTime_seconds
+
+        # Log (start)
+        print("\nCalculate lastTime")
+        self.Log += "\nCalculate lastTime"
+
+        self.Log += f"finishTime of getData is {finishTime}"
+        print(f"finishTime of getData is : {finishTime}")
+
+        self.Log += f"seconds of the finishTime variable is : {finishTime_seconds} s"
+        print(f"seconds of the finish time is : {finishTime_seconds} s")
+
+        self.Log += f"remaining time to end of this minutes is : {remainingTime} s"
+        print(f"remaining time to end of this minutes is : {remainingTime} s")
+
+        self.Log += f"program sleep(wait) for {remainingTime} seconds"
+        print(f"program sleep(wait) for {remainingTime} seconds")
+        # Log (end)
+
+        # then the program must sleep (wait) for remainingTime (seconds)
+        time.sleep(remainingTime)
+
+        # last time is next of sleep
+        lastTime = datetime.datetime.utcnow()
+
+        # we must set nanoSeconds to zero
+        lastDateTime = lastTime.replace(lastTime.year, lastTime.month, lastTime.day,
+                                        lastTime.hour, lastTime.minute, lastTime.second, 0)
+
+        # we need firstTime to second so use timeObj to convert this
+        lastDateTime_seconds = timeObj.convert_date_to_seconds(lastDateTime)
+
+        # Log (start)
+        self.Log += f"\nlastTime is : {lastTime} "
+        print(f"\nlastTime is : {lastTime} ")
+
+        self.Log += f"lastTime with zero nanoSecond : {lastDateTime}"
+        print(f"lastTime with zero nanoSecond : {lastDateTime}")
+
+        self.Log += f"Seconds of the lastDateTime is : {lastDateTime_seconds}"
+        print(f"Seconds of the lastDateTime is : {lastDateTime_seconds}")
+
+        # Log (end)
+
+        """ Set firstTime & lastTime to the init class """
+        # we must set firstTime and lastTime to the cls parameters
+        self.firstTime = firstDateTime_seconds
+        self.lastTime = lastDateTime_seconds
+
+        """ yield df from our data"""
+        return self.frameData(), lastDateTime
+
+    '''working'''
+    def nextData(self):
+        # todo : i must read data from db and if the data is exist in there calc some thing
+        pass
+
+    def test(self):
+        query="SELECT * FROM spotdata WHERE "
+
+
+
+
+
+
+
+
+class NextData:
     pass
+
+
+
+
+
+
+
+
 
 
 '''
@@ -343,15 +475,16 @@ class nextData:
 
 
 obj = pastData("BTC-USDT")
+data1 = obj.firstNextData()
+print(data1[1])
 
-data5 = obj.daysData(1)
-obj.saveData_speed(data5)
-
-
-
-
+print("\n\n\nthis is next ")
+print(data1[0])
 
 
+# data2 = obj.daysData(0)
+# for anyItem1 in data2:
+#     print(anyItem1)
 
 
 

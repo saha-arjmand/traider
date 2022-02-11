@@ -245,33 +245,73 @@ class getData:
         return df
 
     '''done'''
+    # def dayData(self):
+    #
+    #     stopwatch_start = time.perf_counter()
+    #
+    #     # first we create a object from time Class for convert time
+    #     calcTime = Calculate_time()
+    #
+    #     # Today data : in below code we calculate today code
+    #     todayLastTime = calcTime.convert_second_to_utc_time(calcTime.lastTime)
+    #     TodayLastTime_hour = todayLastTime.hour
+    #     TodayLastTime_minute = todayLastTime.minute
+    #
+    #     # Log (start)
+    #     self.Log += f"- dayData lastTime :{todayLastTime}\n"
+    #     print(f"\n- dayData lastTime :{todayLastTime}")
+    #     # Log (end)
+    #
+    #     # total past minute in today is totalTimePastToday
+    #     totalTimePast = ((TodayLastTime_hour * 60) + TodayLastTime_minute)
+    #     # So just we equal number_of_candles to this totalTimePastToday obj
+    #     # base totalTimePast is number of Today minutes
+    #     self.number_of_candles = totalTimePast
+    #
+    #     # Log (start)
+    #     self.Log += f"total candle's number in dayData is : {totalTimePast}\n"
+    #     print(f"\ntotal candle's number in dayData is : {totalTimePast}")
+    #
+    #     stopwatch_stop = time.perf_counter()
+    #     timePassed = round((stopwatch_stop - stopwatch_start), 3)
+    #     self.Log += f"Time passed dayData: {timePassed} s\n"
+    #     print(f"Time passed dayData: {timePassed} s\n")
+    #     # Log (end)
+    #
+    #     return self.frameData()
+
     def dayData(self):
 
         stopwatch_start = time.perf_counter()
-
         # first we create a object from time Class for convert time
-        calcTime = Calculate_time()
+        timeObj = Calculate_time()
 
-        # Today data : in below code we calculate today code
-        todayLastTime = calcTime.convert_second_to_utc_time(calcTime.lastTime)
-        TodayLastTime_hour = todayLastTime.hour
-        TodayLastTime_minute = todayLastTime.minute
+        """ calculate last Time"""
+
+        # first calculate now time
+        nowTime = datetime.datetime.utcnow()
+
+        # then i must set minute to zero for calculate last time
+        nowTime_zeroMin = nowTime.replace(nowTime.year, nowTime.month, nowTime.day,
+                                          nowTime.hour, nowTime.minute, 0, 0)
+
+        # calculate nowTime_zeroMin to seconds for calculate today last time
+
+        lastTime_seconds = timeObj.convert_date_to_seconds(nowTime_zeroMin)
+
+        """ calculate first Time"""
+
+        # calculate first time with replace time hour and minute and second to zero
+        firstTime = nowTime.replace(nowTime.year, nowTime.month, nowTime.day,
+                                    0, 0, 0, 0)
+        firstTime_seconds = timeObj.convert_date_to_seconds(firstTime)
+
+        """ replace first time and last time with init parameter of the class """
+
+        self.firstTime = firstTime_seconds
+        self.lastTime = lastTime_seconds
 
         # Log (start)
-        self.Log += f"- dayData lastTime :{todayLastTime}\n"
-        print(f"\n- dayData lastTime :{todayLastTime}")
-        # Log (end)
-
-        # total past minute in today is totalTimePastToday
-        totalTimePast = ((TodayLastTime_hour * 60) + TodayLastTime_minute)
-        # So just we equal number_of_candles to this totalTimePastToday obj
-        # base totalTimePast is number of Today minutes
-        self.number_of_candles = totalTimePast
-
-        # Log (start)
-        self.Log += f"total candle's number in dayData is : {totalTimePast}\n"
-        print(f"\ntotal candle's number in dayData is : {totalTimePast}")
-
         stopwatch_stop = time.perf_counter()
         timePassed = round((stopwatch_stop - stopwatch_start), 3)
         self.Log += f"Time passed dayData: {timePassed} s\n"
@@ -546,39 +586,34 @@ class getData:
 ###########################_Run_Area_###########################
 '''
 
-
+# Create obj from cls
 obj = getData("BTC-USDT")
 dbObj = database.DataBase()
 
-# dayData :
-data1 = obj.dayData()
-print(data1)
-dbObj.saveSingleDF(data1, 'spotdata')
-
-# daysData
-data2 = obj.daysData(1)
-for anyData in data2:
+# past Data
+pastData = obj.daysData(2)
+for anyData in pastData:
     print(anyData)
-    dbObj.saveSingleDF(anyData, 'spotdata')
+    dbObj.saveData(anyData, 'spotdata')
+
+    # Log (start)
+    print("\n---------------------------")
+    print("save past data done")
+    print("---------------------------\n")
+    # Log (end)
 
 
-# past = obj.dayData()
-# print(len(past))
-#
-# i = 0
-# dataList = []
-#
-# for i in range(len(past)):
-#     data = int(past.iloc[i:i+1, 0])
-#     dataList.append(data)
-#     i += 1
-#
-#
-# for j in range(len(past)):
-#     if int(past.iloc[j:j+1, 0]) in dataList:
-#         print("true")
-#     else:
-#         print("false")
+# today Data :
+todayData = obj.dayData()
+print(todayData)
+dbObj.saveData(todayData, 'spotdata')
+
+# Log (start)
+print("\n---------------------------")
+print("save today data done")
+print("---------------------------\n")
+# Log (end)
+
 
 
 

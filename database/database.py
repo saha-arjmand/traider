@@ -50,27 +50,27 @@ class DataBase:
 
         print(listDb)
 
-    '''working'''
+    '''done'''
     idSet = set()
 
-    def saveSingleDF(self, dayData, tableName):
+    def saveSingleDF(self, singleData, tableName):
 
         # first i must to check the database is exist then start start save progress
         if self.isExist_db():
 
             errorNumber = 0
             # if db is exist i define a loop than save dataframe id to a list
-            for i in range(len(dayData)):
+            for i in range(len(singleData)):
 
                 # get id from dataframe for each row of table
-                dataID = int(dayData.iloc[i:i + 1, 0])
+                dataID = int(singleData.iloc[i:i + 1, 0])
 
                 # If the id dont in setID then add id to the set (idSet)
                 if dataID not in self.idSet:
                     self.idSet.add(dataID)
 
                     # i calculate any row of data to save to db
-                    anyItemData = dayData[i:i + 1]
+                    anyItemData = singleData[i:i + 1]
 
                     # then next : i request to db and save data to db
                     try:
@@ -86,3 +86,7 @@ class DataBase:
                     print(" the id is duplicated ")
         else:
             print("database not found !")
+
+
+    def saveMultiDF(self, multiData, tableName)
+        pass

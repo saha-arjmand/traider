@@ -1,6 +1,11 @@
 alpha
  --------------------------------
 
+ . i must change save to database method :
+    1- i must have a set from all data i must add to database and set is unique for any id
+    2 - if data not in set then save to database
+    3 - else : print (" this id is duplicated in database ")
+
 . clean log and create setting
 . fix bug getData
 

@@ -9,13 +9,15 @@ import pandas as pd
 import numpy as np
 import time
 import concurrent.futures
+import asyncio
+
 
 # Option to display
 pd.set_option('display.max_columns', None)
 
 
 # Get Data From API
-class pastData:
+class getData:
 
     Log = "\nLogfile: \n\n"
 
@@ -84,7 +86,7 @@ class pastData:
 
         i = 0
         numberOfTry = 5
-        while i <= numberOfTry:
+        while i < numberOfTry:
             try:
                 response = requests.get(url=url)
 
@@ -231,7 +233,7 @@ class pastData:
             df["high"], df["Low"], df["volume"], df["amount"] = data.T
 
         # this code set time column to our index dataframe
-        # df.set_index('time', inplace=True)
+        # df.set_index('id', inplace=True)
 
         # Log (start)
         stopwatch_stop = time.perf_counter()
@@ -299,9 +301,6 @@ class pastData:
 
         stopwatch_start = time.perf_counter()
 
-        # Today data
-        yield self.dayData()
-
         # first we create a object from time Class for convert time
         calcObj = Calculate_time()
         timespan = calcObj.pastDay(daysNumber)
@@ -321,6 +320,9 @@ class pastData:
             # Log (end)
 
             yield self.frameData()
+
+            # Today data
+            # yield self.dayData()
 
         # Log (start)
         stopwatch_stop = time.perf_counter()
@@ -485,11 +487,88 @@ class pastData:
 
             yield self.frameData()
 
+    async def main(self):
+
+        # 1 : get past 5 days data
+        past = self.daysData(1)
+        self.saveData_speed(past)
+
+        # Log (start)
+        print("\n---------------------------")
+        print("save past data done")
+        print("---------------------------\n")
+        # Log (end)
+
+        await asyncio.sleep(5)
+
+        # 2 : get today data
+        # today = self.dayData()
+        # self.saveData(today)
+
+        # Log (start)
+        # print("\n---------------------------")
+        # print("save today data done")
+        # print("---------------------------\n")
+        # Log (end)
+
+        await asyncio.sleep(5)
+
+        # 3 : get now data
+        # now = self.firstNextData()
+        # print(now)
+        # self.saveData(now)
+
+        # Log (start)
+        # print("\n---------------------------")
+        # print("save now data done")
+        # print("---------------------------\n")
+        # Log (end)
+
+        # 4 : get next data
+
+        # Log (start)
+        # print("\n---------------------------")
+        # print("start to get next data")
+        # print("---------------------------\n")
+        # Log (end)
+
+        # nextData = self.nextData()
+        # for anyItem in nextData:
+        #     print(anyItem)
+        #     self.saveData(anyItem)
+
+    '''working'''
+
+
+
 
 '''
 ###########################_Run_Area_###########################
 '''
 
+
+obj = getData("BTC-USDT")
+data = obj.dayData()
+print(data)
+dbObj = database.DataBase()
+dbObj.saveSingleDF(data, 'spotdata')
+# past = obj.dayData()
+# print(len(past))
+#
+# i = 0
+# dataList = []
+#
+# for i in range(len(past)):
+#     data = int(past.iloc[i:i+1, 0])
+#     dataList.append(data)
+#     i += 1
+#
+#
+# for j in range(len(past)):
+#     if int(past.iloc[j:j+1, 0]) in dataList:
+#         print("true")
+#     else:
+#         print("false")
 
 
 

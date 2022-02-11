@@ -50,24 +50,39 @@ class DataBase:
 
         print(listDb)
 
-    def saveDb(self, df, tableName):
+    '''working'''
+    idSet = set()
 
+    def saveSingleDF(self, dayData, tableName):
+
+        # first i must to check the database is exist then start start save progress
         if self.isExist_db():
 
-            # this Prevents duplicate data storage in the database
             errorNumber = 0
-            for i in range(len(df)):
-                try:
-                    df.iloc[i:i + 1].to_sql(name=tableName, if_exists='append', con=kucoin_tables.my_conn, index=False)
-                    print(f"save data {i} to databases")
-                except exc.IntegrityError as e:
+            # if db is exist i define a loop than save dataframe id to a list
+            for i in range(len(dayData)):
 
-                    # if the error of this prevents duplicate more than 5 Stop
+                # get id from dataframe for each row of table
+                dataID = int(dayData.iloc[i:i + 1, 0])
 
-                    print(f"Error {errorNumber} when save data : {e}")
-                    if errorNumber > 4:
-                        break
-                    errorNumber += 1
+                # If the id dont in setID then add id to the set (idSet)
+                if dataID not in self.idSet:
+                    self.idSet.add(dataID)
 
+                    # i calculate any row of data to save to db
+                    anyItemData = dayData[i:i + 1]
+
+                    # then next : i request to db and save data to db
+                    try:
+                        anyItemData.to_sql(name=tableName, if_exists='append', con=kucoin_tables.my_conn, index=False)
+                        print(f"save data {i} to database")
+
+                    # and if the request to db dont success i print Exception
+                    except Exception as e:
+                        print(f"\nerror number : {errorNumber}")
+                        print(f"error text : {e}")
+                        errorNumber += 1
+                else:
+                    print(" the id is duplicated ")
         else:
             print("database not found !")

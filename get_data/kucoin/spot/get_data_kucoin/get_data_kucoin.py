@@ -548,10 +548,20 @@ class getData:
 
 
 obj = getData("BTC-USDT")
-data = obj.dayData()
-print(data)
 dbObj = database.DataBase()
-dbObj.saveSingleDF(data, 'spotdata')
+
+# dayData :
+data1 = obj.dayData()
+print(data1)
+dbObj.saveSingleDF(data1, 'spotdata')
+
+# daysData
+data2 = obj.daysData(1)
+for anyData in data2:
+    print(anyData)
+    dbObj.saveSingleDF(anyData, 'spotdata')
+
+
 # past = obj.dayData()
 # print(len(past))
 #

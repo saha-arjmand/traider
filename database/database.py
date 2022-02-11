@@ -53,7 +53,7 @@ class DataBase:
     '''done'''
     idSet = set()
 
-    def saveSingleDF(self, singleData, tableName):
+    def saveData(self, singleData, tableName):
 
         # first i must to check the database is exist then start start save progress
         if self.isExist_db():
@@ -86,7 +86,3 @@ class DataBase:
                     print(" the id is duplicated ")
         else:
             print("database not found !")
-
-
-    def saveMultiDF(self, multiData, tableName)
-        pass

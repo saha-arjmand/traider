@@ -17,7 +17,7 @@ pd.set_option('display.max_columns', None)
 
 
 # Get Data From API
-class getData:
+class GetData:
 
     Log = "\nLogfile: \n\n"
 
@@ -245,41 +245,6 @@ class getData:
         return df
 
     '''done'''
-    # def dayData(self):
-    #
-    #     stopwatch_start = time.perf_counter()
-    #
-    #     # first we create a object from time Class for convert time
-    #     calcTime = Calculate_time()
-    #
-    #     # Today data : in below code we calculate today code
-    #     todayLastTime = calcTime.convert_second_to_utc_time(calcTime.lastTime)
-    #     TodayLastTime_hour = todayLastTime.hour
-    #     TodayLastTime_minute = todayLastTime.minute
-    #
-    #     # Log (start)
-    #     self.Log += f"- dayData lastTime :{todayLastTime}\n"
-    #     print(f"\n- dayData lastTime :{todayLastTime}")
-    #     # Log (end)
-    #
-    #     # total past minute in today is totalTimePastToday
-    #     totalTimePast = ((TodayLastTime_hour * 60) + TodayLastTime_minute)
-    #     # So just we equal number_of_candles to this totalTimePastToday obj
-    #     # base totalTimePast is number of Today minutes
-    #     self.number_of_candles = totalTimePast
-    #
-    #     # Log (start)
-    #     self.Log += f"total candle's number in dayData is : {totalTimePast}\n"
-    #     print(f"\ntotal candle's number in dayData is : {totalTimePast}")
-    #
-    #     stopwatch_stop = time.perf_counter()
-    #     timePassed = round((stopwatch_stop - stopwatch_start), 3)
-    #     self.Log += f"Time passed dayData: {timePassed} s\n"
-    #     print(f"Time passed dayData: {timePassed} s\n")
-    #     # Log (end)
-    #
-    #     return self.frameData()
-
     def dayData(self):
 
         stopwatch_start = time.perf_counter()
@@ -321,11 +286,12 @@ class getData:
         return self.frameData()
 
     '''done'''
-    def lastData_dayData(self):
+    @staticmethod
+    def lastData_dayData(df):
 
         """get the last Datetime from dayData df"""
-        lastTime = self.dayData().iloc[0, 2]
-        lastDate = self.dayData().iloc[0, 1]
+        lastTime = df.iloc[0, 2]
+        lastDate = df.iloc[0, 1]
         fullTime = f"{lastDate} {lastTime}"
         date_time_obj = datetime.datetime.strptime(fullTime, '%Y-%m-%d %H:%M:%S')
 
@@ -400,13 +366,13 @@ class getData:
         self.saveData_speed(self.daysData(0))
 
     '''done'''
-    def firstNextData(self):
+    def nowData(self, lastData_dayData):
 
         """Create time object for calculate time"""
         timeObj = Calculate_time()
 
         """Calculate first time"""
-        firstTime_seconds = self.lastData_dayData()
+        firstTime_seconds = lastData_dayData
 
         # Log (start)
         print("\nfirstNextData")
@@ -471,16 +437,16 @@ class getData:
         self.lastTime = lastDateTime_seconds
 
         """ return df from our data"""
-        return self.frameData(), lastDateTime_seconds
+        return self.frameData()
 
     '''working'''
-    def nextData(self):
+    def nextData(self, lastData_dayData):
 
         """ Create time object to calc time """
         timeObj = Calculate_time()
 
         """ Calculate first time to start get data """
-        startTime = self.firstNextData()[1]
+        startTime = lastData_dayData
 
         # Log (start)
         print(f"\nnextData :")
@@ -527,57 +493,70 @@ class getData:
 
             yield self.frameData()
 
-    async def main(self):
+    '''working'''
+    @staticmethod
+    def main():
 
-        # 1 : get past 5 days data
-        past = self.daysData(1)
-        self.saveData_speed(past)
+        """Create Objects """
+        obj = GetData("BTC-USDT")
+        dbObj = database.DataBase()
+
+        """ Past Data """
+        pastDays = 1
+        pastData = obj.daysData(1)
+        for anyData in pastData:
+            print(anyData)
+            dbObj.saveData(anyData, 'spotdata')
+
+            # Log (start)
+            print("\n---------------------------")
+            print(f"save past data {pastDays} done")
+            pastDays += 1
+            print("---------------------------\n")
+            # Log (end)
+
+        """ Today Data """
+        todayData = obj.dayData()
+        print(todayData)
+        dbObj.saveData(todayData, 'spotdata')
 
         # Log (start)
         print("\n---------------------------")
-        print("save past data done")
+        print("save today data done")
         print("---------------------------\n")
         # Log (end)
 
-        await asyncio.sleep(5)
+        """ last time of todayData"""
+        timeObj = Calculate_time()
+        lastData_dayData = obj.lastData_dayData(todayData)
+        lastData_dayData_show = timeObj.convert_second_to_utc_time(obj.lastData_dayData(todayData))
+        print("\n---------------------------")
+        print(f"\nlast today data is : {lastData_dayData_show}\n")
+        print("---------------------------\n")
 
-        # 2 : get today data
-        # today = self.dayData()
-        # self.saveData(today)
-
-        # Log (start)
-        # print("\n---------------------------")
-        # print("save today data done")
-        # print("---------------------------\n")
-        # Log (end)
-
-        await asyncio.sleep(5)
-
-        # 3 : get now data
-        # now = self.firstNextData()
-        # print(now)
-        # self.saveData(now)
+        """ now Data """
+        nowData = obj.nowData(lastData_dayData)
+        print(nowData)
+        dbObj.saveData(nowData, 'spotdata')
 
         # Log (start)
-        # print("\n---------------------------")
-        # print("save now data done")
-        # print("---------------------------\n")
+        print("\n---------------------------")
+        print("save now data done")
+        print("---------------------------\n")
         # Log (end)
 
-        # 4 : get next data
+        """ Next Data """
 
         # Log (start)
-        # print("\n---------------------------")
-        # print("start to get next data")
-        # print("---------------------------\n")
+        print("\n---------------------------")
+        print("start to get next data")
+        print("---------------------------\n")
         # Log (end)
 
-        # nextData = self.nextData()
-        # for anyItem in nextData:
-        #     print(anyItem)
-        #     self.saveData(anyItem)
-
-    '''working'''
+        nextData = obj.nextData(lastData_dayData)
+        for anyItem in nextData:
+            print(anyItem)
+            dbObj.saveData(anyItem, 'spotdata')
 
 
 
@@ -586,33 +565,12 @@ class getData:
 ###########################_Run_Area_###########################
 '''
 
-# Create obj from cls
-obj = getData("BTC-USDT")
-dbObj = database.DataBase()
-
-# past Data
-pastData = obj.daysData(2)
-for anyData in pastData:
-    print(anyData)
-    dbObj.saveData(anyData, 'spotdata')
-
-    # Log (start)
-    print("\n---------------------------")
-    print("save past data done")
-    print("---------------------------\n")
-    # Log (end)
+objGetData = GetData("BTC-USDT")
+objGetData.main()
 
 
-# today Data :
-todayData = obj.dayData()
-print(todayData)
-dbObj.saveData(todayData, 'spotdata')
 
-# Log (start)
-print("\n---------------------------")
-print("save today data done")
-print("---------------------------\n")
-# Log (end)
+
 
 
 

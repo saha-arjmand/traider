@@ -1,13 +1,9 @@
 alpha
  --------------------------------
 
- . i must change save to database method :
-    1- i must have a set from all data i must add to database and set is unique for any id
-    2 - if data not in set then save to database
-    3 - else : print (" this id is duplicated in database ")
-
+. solve module import in kucoin tables
 . clean log and create setting
-. fix bug getData
+
 
 
 . Create loading db class that check db is existed and past and next data save
@@ -84,3 +80,8 @@ Done
 # this class should have 2 basic method :
 # thread 1 : get out last time in db and check with now time then save past time to db
 # thread 2 : Calculate next time and save data in db
+ . i must change save to database method :
+    1- i must have a set from all data i must add to database and set is unique for any id
+    2 - if data not in set then save to database
+    3 - else : print (" this id is duplicated in database ")
+ . fix bug getData

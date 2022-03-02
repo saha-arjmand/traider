@@ -1,1 +1,1 @@
-from .kucoin_tables import *
+# from .kucoin_tables import *

@@ -1,4 +1,3 @@
-
 # import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Date, Time, Float, Integer, String, Sequence, BIGINT
@@ -11,8 +10,6 @@ from traider.database import secrets
 # import table Models
 import tableModels
 
-
-
 Base = declarative_base()
 
 my_conn = create_engine(
@@ -20,25 +17,32 @@ my_conn = create_engine(
 
 
 class CreateTable:
-
     """ with this method we get the table name """
-    def __init__(self, table_name, table_model):
-        self.table_name = table_name
 
-        if table_model == 'spot':
+    def __init__(self, table_name, table_model, exchange):
+        self.table_name = table_name.lower()
+
+        '''in this part we highlighting the model of our table to create it'''
+        if table_model.lower() == 'spot':
             self.table_model = tableModels.spot.Model
+            self.table_model_name = table_model.lower()
+
+        self.exchange = exchange.lower()
 
     """ with this method we replace our name with table name """
+
     def build_table(self):
         classname = self.table_name
-        ticket = type(classname, (Base, self.table_model), {'__tablename__': self.table_name})
+        ticket = type(classname, (Base, self.table_model), {'__tablename__': self.exchange + '.' +
+                                                                             self.table_name + '-' +
+                                                                             self.table_model_name})
         return ticket
 
     """ with this method we create the table with our name """
+
     def create(self):
         self.build_table().__table__.create(bind=my_conn)
 
 
-obj = CreateTable('BTCUSDT', 'spot')
+obj = CreateTable('BTCUSDT', 'spot', 'kucoin')
 obj.create()
-

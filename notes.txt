@@ -1,6 +1,7 @@
 alpha
  --------------------------------
 
+. what is module in python ? 
 . solve module import in kucoin tables
 . clean log and create setting
 

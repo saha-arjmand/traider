@@ -1,6 +1,5 @@
 import mysql.connector as sql
-from traider.database.kucoin_db import kucoin_tables
-from sqlalchemy import exc
+from traider.database import tables
 
 
 class DataBase:
@@ -74,7 +73,7 @@ class DataBase:
 
                     # then next : i request to db and save data to db
                     try:
-                        anyItemData.to_sql(name=tableName, if_exists='append', con=kucoin_tables.my_conn, index=False)
+                        anyItemData.to_sql(name=tableName, if_exists='append', con=tables.my_conn, index=False)
                         print(f"save data {i} to database")
 
                     # and if the request to db dont success i print Exception

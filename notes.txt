@@ -1,8 +1,8 @@
 alpha
  --------------------------------
 
+ . add timeFrame to dataframe
 
-. clean log and create setting
 
 
 
@@ -87,3 +87,4 @@ Done
  . fix bug getData
  . what is module in python ?
 . solve module import in kucoin tables
+ . add timeFrame to init method

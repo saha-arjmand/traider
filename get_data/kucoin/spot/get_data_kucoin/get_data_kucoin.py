@@ -26,7 +26,7 @@ class GetData:
 
     """ In this Class Constructor if we set firstTime & lastTime Parameter then the
         number_of_candles parameters dont use in this Class                         """
-    def __init__(self, symbol, exchange, tradeType, firstTime=0, lastTime=0, number_of_candles=1):
+    def __init__(self, symbol, exchange, tradeType, timeFrame, firstTime=0, lastTime=0, number_of_candles=1):
 
         # check type of integer values is int
         if (type(number_of_candles | firstTime | lastTime)) is int:
@@ -35,6 +35,7 @@ class GetData:
             self.lastTime = lastTime
             self.exchange = exchange
             self.tradeType = tradeType
+            self.timeFrame = timeFrame
             # check type of string values is str
             if type(symbol) is str:
                 self.symbol = symbol
@@ -42,8 +43,6 @@ class GetData:
             # i must remove - from symbol to create table name with symbol without -
             newSymbol = self.symbol.replace("-", "").lower()
             self.tableName = f"{self.exchange}_{newSymbol}_{self.tradeType}"
-
-
 
     '''done'''
     def getData(self):
@@ -68,12 +67,12 @@ class GetData:
             number_of_candles = self.number_of_candles
             lastTime = Calculate_time.lastTime
             firstTime = Calculate_time.firstTime - (number_of_candles - 1) * 60
-            url = urlObj.URL(lastTime, firstTime, symbol, "1min")
+            url = urlObj.URL(lastTime, firstTime, symbol, self.timeFrame)
         else:
             firstTime = self.firstTime
             lastTime = self.lastTime
             # use from urlObj to create url
-            url = urlObj.URL(lastTime, firstTime, symbol, "1min")
+            url = urlObj.URL(lastTime, firstTime, symbol, self.timeFrame)
 
         # Log (start)
         print(f"this getData firs time : {timeObj.convert_second_to_utc_time(firstTime)}")
@@ -482,7 +481,7 @@ class GetData:
     def main():
 
         """Create Objects """
-        obj = GetData("BTC-USDT", 'kucoin', 'spot')
+        obj = GetData("BTC-USDT", 'kucoin', 'spot', '1min')
         dbObj = database.DataBase()
 
         """ Past Data """
@@ -549,7 +548,7 @@ class GetData:
 ###########################_Run_Area_###########################
 '''
 
-objGetData = GetData("BTC-USDT", 'kucoin', 'spot')
+objGetData = GetData("BTC-USDT", 'kucoin', 'spot', '1min')
 objGetData.main()
 
 

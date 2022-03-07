@@ -301,8 +301,8 @@ class GetData:
     def lastData_dayData(df):
 
         """get the last Datetime from dayData df"""
-        lastTime = df.iloc[0, 2]
-        lastDate = df.iloc[0, 1]
+        lastTime = df.iloc[0, 3]
+        lastDate = df.iloc[0, 2]
         fullTime = f"{lastDate} {lastTime}"
         date_time_obj = datetime.datetime.strptime(fullTime, '%Y-%m-%d %H:%M:%S')
 

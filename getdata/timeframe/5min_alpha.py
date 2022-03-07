@@ -1,4 +1,4 @@
-from traider.getdata.kucoin.spot.url import CreateUrl
+from traider.getdata.url.kucoin import CreateUrl
 from traider.utils.time.time import Calculate_time
 import requests
 

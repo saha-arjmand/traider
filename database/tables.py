@@ -33,8 +33,8 @@ class CreateTable:
 
     def build_table(self):
         classname = self.table_name
-        ticket = type(classname, (Base, self.table_model), {'__tablename__': self.exchange + '.' +
-                                                                             self.table_name + '-' +
+        ticket = type(classname, (Base, self.table_model), {'__tablename__': self.exchange + '_' +
+                                                                             self.table_name + '_' +
                                                                              self.table_model_name})
         return ticket
 

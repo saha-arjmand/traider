@@ -1,5 +1,5 @@
 import mysql.connector as sql
-import traider.database.models as md
+import traider.database.tables as tb
 
 
 class DataBase:
@@ -73,7 +73,7 @@ class DataBase:
 
                     # then next : i request to db and save data to db
                     try:
-                        anyItemData.to_sql(name=tableName, if_exists='append', con=tables.my_conn, index=False)
+                        anyItemData.to_sql(name=tableName, if_exists='append', con=tb.my_conn, index=False)
                         print(f"save data {i} to database")
 
                     # and if the request to db dont success i print Exception

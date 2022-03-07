@@ -26,17 +26,24 @@ class GetData:
 
     """ In this Class Constructor if we set firstTime & lastTime Parameter then the
         number_of_candles parameters dont use in this Class                         """
-    def __init__(self, symbol, firstTime=0, lastTime=0, number_of_candles=1):
+    def __init__(self, symbol, exchange, tradeType, firstTime=0, lastTime=0, number_of_candles=1):
 
         # check type of integer values is int
         if (type(number_of_candles | firstTime | lastTime)) is int:
             self.number_of_candles = number_of_candles
             self.firstTime = firstTime
             self.lastTime = lastTime
+            self.exchange = exchange
+            self.tradeType = tradeType
+            # check type of string values is str
+            if type(symbol) is str:
+                self.symbol = symbol
 
-        # check type of string values is str
-        if type(symbol) is str:
-            self.symbol = symbol
+            # i must remove - from symbol to create table name with symbol without -
+            newSymbol = self.symbol.replace("-", "").lower()
+            self.tableName = f"{self.exchange}_{newSymbol}_{self.tradeType}"
+
+
 
     '''done'''
     def getData(self):
@@ -498,7 +505,7 @@ class GetData:
     def main():
 
         """Create Objects """
-        obj = GetData("BTC-USDT")
+        obj = GetData("BTC-USDT", 'kucoin', 'spot')
         dbObj = database.DataBase()
 
         """ Past Data """
@@ -506,57 +513,57 @@ class GetData:
         pastData = obj.daysData(1)
         for anyData in pastData:
             print(anyData)
-            # dbObj.saveData(anyData, 'spotdata')
+            dbObj.saveData(anyData, obj.tableName)
 
             # Log (start)
-            # print("\n---------------------------")
-            # print(f"save past data {pastDays} done")
-            # pastDays += 1
-            # print("---------------------------\n")
+            print("\n---------------------------")
+            print(f"save past data {pastDays} done")
+            pastDays += 1
+            print("---------------------------\n")
             # Log (end)
 
         """ Today Data """
-        # todayData = obj.dayData()
-        # print(todayData)
-        # dbObj.saveData(todayData, 'spotdata')
+        todayData = obj.dayData()
+        print(todayData)
+        dbObj.saveData(todayData, obj.tableName)
 
         # Log (start)
-        # print("\n---------------------------")
-        # print("save today data done")
-        # print("---------------------------\n")
+        print("\n---------------------------")
+        print("save today data done")
+        print("---------------------------\n")
         # Log (end)
 
         """ last time of todayData"""
-        # timeObj = Calculate_time()
-        # lastData_dayData = obj.lastData_dayData(todayData)
-        # lastData_dayData_show = timeObj.convert_second_to_utc_time(obj.lastData_dayData(todayData))
-        # print("\n---------------------------")
-        # print(f"\nlast today data is : {lastData_dayData_show}\n")
-        # print("---------------------------\n")
+        timeObj = Calculate_time()
+        lastData_dayData = obj.lastData_dayData(todayData)
+        lastData_dayData_show = timeObj.convert_second_to_utc_time(obj.lastData_dayData(todayData))
+        print("\n---------------------------")
+        print(f"\nlast today data is : {lastData_dayData_show}\n")
+        print("---------------------------\n")
 
         """ now Data """
-        # nowData = obj.nowData(lastData_dayData)
-        # print(nowData)
-        # dbObj.saveData(nowData, 'spotdata')
+        nowData = obj.nowData(lastData_dayData)
+        print(nowData)
+        dbObj.saveData(nowData, obj.tableName)
 
         # Log (start)
-        # print("\n---------------------------")
-        # print("save now data done")
-        # print("---------------------------\n")
+        print("\n---------------------------")
+        print("save now data done")
+        print("---------------------------\n")
         # Log (end)
 
         """ Next Data """
 
         # Log (start)
-        # print("\n---------------------------")
-        # print("start to get next data")
-        # print("---------------------------\n")
+        print("\n---------------------------")
+        print("start to get next data")
+        print("---------------------------\n")
         # Log (end)
 
-        # nextData = obj.nextData(lastData_dayData)
-        # for anyItem in nextData:
-        #     print(anyItem)
-        #     dbObj.saveData(anyItem, 'spotdata')
+        nextData = obj.nextData(lastData_dayData)
+        for anyItem in nextData:
+            print(anyItem)
+            dbObj.saveData(anyItem, obj.tableName)
 
 
 
@@ -565,7 +572,7 @@ class GetData:
 ###########################_Run_Area_###########################
 '''
 
-objGetData = GetData("BTC-USDT")
+objGetData = GetData("BTC-USDT", 'kucoin', 'spot')
 objGetData.main()
 
 

@@ -345,29 +345,6 @@ class GetData:
         # Log (end)
 
     '''done'''
-    @staticmethod
-    def saveData(data):
-
-        tableName = "spotdata"
-        db = database.DataBase()
-        db.saveDb(data, tableName)
-
-    ''' this function get data collection and save their in db with open thread for each data'''
-    def saveData_speed(self, dataList):
-
-        stopwatch_start = time.perf_counter()
-
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(self.saveData, dataList)
-
-        # Log (start)
-        stopwatch_stop = time.perf_counter()
-        timePassed = round((stopwatch_stop - stopwatch_start), 3)
-        self.Log += f"Time passed saveData_speed : {timePassed} s\n"
-        print(f"Time passed saveData_speed: {timePassed} s\n")
-        # Log (end)
-
-    '''done'''
     def syncPastData(self):
         # first we sync today data again for sure that the today data is complete
         self.saveData_speed(self.daysData(0))
@@ -510,17 +487,17 @@ class GetData:
 
         """ Past Data """
         pastDays = 1
-        pastData = obj.daysData(1)
+        pastData = obj.daysData(3)
         for anyData in pastData:
             print(anyData)
-            dbObj.saveData(anyData, obj.tableName)
+            dbObj.saveData_speed(pastData)
 
-            # Log (start)
-            print("\n---------------------------")
-            print(f"save past data {pastDays} done")
-            pastDays += 1
-            print("---------------------------\n")
-            # Log (end)
+        # Log(start)
+        print("\n---------------------------")
+        print(f"save past data {pastDays} done")
+        pastDays += 1
+        print("---------------------------\n")
+        # Log(end)
 
         """ Today Data """
         todayData = obj.dayData()

@@ -1,6 +1,6 @@
 import mysql.connector as sql
 import traider.database.tables as tb
-
+import concurrent.futures
 
 class DataBase:
 
@@ -52,7 +52,8 @@ class DataBase:
     '''done'''
     idSet = set()
 
-    def saveData(self, singleData, tableName):
+    ''' this function get data collection and save their in db with open thread for each data'''
+    def saveData(self, singleData, tableName = 'kucoin_btcusdt_spot'):
 
         # first i must to check the database is exist then start start save progress
         if self.isExist_db():
@@ -85,3 +86,8 @@ class DataBase:
                     print(" the id is duplicated ")
         else:
             print("database not found !")
+
+    def saveData_speed(self, dataList):
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            executor.map(self.saveData, dataList)
+

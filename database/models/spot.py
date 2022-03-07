@@ -9,6 +9,7 @@ from sqlalchemy import Column, Date, Time, Float, Integer, String, Sequence
 class Model:
 
     id = Column(Integer, Sequence('id_seq'), primary_key=True)
+    timeframe = Column(String(32), nullable=False)
     date = Column(Date, nullable=False)
     time = Column(Time, nullable=False)
     symbol = Column(String(32), nullable=False)

@@ -1,7 +1,7 @@
 alpha
  --------------------------------
 
- . add timeFrame to dataframe
+
 
 
 
@@ -88,3 +88,4 @@ Done
  . what is module in python ?
 . solve module import in kucoin tables
  . add timeFrame to init method
+  . add timeFrame to dataframe

@@ -199,17 +199,22 @@ class GetData:
             timeInfo = calcObj.convert_second_to_utc_time(int(data[i, 0])).time()
 
             # 5 : add datetime that extract in step 2 to final array
-            fullData1 = np.insert(dataInfo, 0, dataId, axis=0)
+            fullData0 = np.insert(dataInfo, 0, dataId, axis=0)
+
+            # TimeFrame
+            timeFrame = str(self.timeFrame)
+            # add timeFrame to the dataFrame
+            fullData1 = np.insert(fullData0, 1, timeFrame, axis=0)
 
             # 6 : add date that extract in step 2 to final array
-            fullData2 = np.insert(fullData1, 1, dateInfo, axis=0)
+            fullData2 = np.insert(fullData1, 2, dateInfo, axis=0)
 
             # 5 : add time that extract in step 3 to final array
             # for add to a numpy array the data must be a tuple so we casting data to tuple
-            fullData3 = np.insert(fullData2, 2, timeInfo, axis=0)
+            fullData3 = np.insert(fullData2, 3, timeInfo, axis=0)
 
             # 6 : add symbol to our dataframe
-            fullData4 = tuple(np.insert(fullData3, 3, self.symbol, axis=0))
+            fullData4 = tuple(np.insert(fullData3, 4, self.symbol, axis=0))
 
             # 7 : we must add fullData2 to a 2D array
             finalList.append(fullData4)
@@ -235,7 +240,7 @@ class GetData:
         data = self.organizeData()
 
         df = pd.DataFrame()
-        df["id"], df["date"], df["time"], df["symbol"], df["open"], df["close"], \
+        df["id"], df["timeframe"], df["date"], df["time"], df["symbol"], df["open"], df["close"], \
             df["high"], df["Low"], df["volume"], df["amount"] = data.T
 
         # this code set time column to our index dataframe

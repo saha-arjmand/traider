@@ -1,4 +1,4 @@
-from traider.get_data.kucoin.spot.get_data_kucoin import pastData
+from traider.getdata.kucoin.spot.get_data_kucoin import pastData
 
 # Get past data and save in db
 

@@ -1,9 +1,7 @@
 import datetime
-
 from traider.utils.time.time import Calculate_time
-from traider.get_data.kucoin.spot.url import CreateUrl
+from traider.getdata.url.kucoin import CreateUrl
 from traider.database import database
-from traider.get_data.kucoin.spot.symbol.symbols import Symbols
 import requests
 import pandas as pd
 import numpy as np

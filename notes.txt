@@ -1,7 +1,13 @@
 alpha
  --------------------------------
 
-
+. wright test for project
+. Create 5 minutes data function
+. Create 15 minutes data function
+. Create 30 minutes data function
+. create 1 hour data function
+. create 4 hour data function
+. create 1 day data function
 
 
 
@@ -18,12 +24,7 @@ alpha
 . Create Class of database (tables) separated for any coin's symbol
 
 . multi timeFrame data classes
-. Create 5 minutes data function
-. Create 15 minutes data function
-. Create 30 minutes data function
-. create 1 hour data function
-. create 4 hour data function
-. create 1 day data function
+
 
 Beta
 --------------------------------

@@ -8,7 +8,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from traider.database import secrets
 
 # import table Models
-import tableModels
+import traider.database.models as md
 
 Base = declarative_base()
 
@@ -24,7 +24,7 @@ class CreateTable:
 
         '''in this part we highlighting the model of our table to create it'''
         if table_model.lower() == 'spot':
-            self.table_model = tableModels.spot.Model
+            self.table_model = md.spot.Model
             self.table_model_name = table_model.lower()
 
         self.exchange = exchange.lower()
@@ -44,5 +44,5 @@ class CreateTable:
         self.build_table().__table__.create(bind=my_conn)
 
 
-obj = CreateTable('BTCUSDT', 'spot', 'kucoin')
-obj.create()
+# obj = CreateTable('BTCUSDT', 'spot', 'kucoin')
+# obj.create()

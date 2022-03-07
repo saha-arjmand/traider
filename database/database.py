@@ -1,5 +1,5 @@
 import mysql.connector as sql
-from traider.database import tables
+import traider.database.models as md
 
 
 class DataBase:

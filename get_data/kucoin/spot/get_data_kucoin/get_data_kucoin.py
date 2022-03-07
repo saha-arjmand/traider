@@ -506,57 +506,57 @@ class GetData:
         pastData = obj.daysData(1)
         for anyData in pastData:
             print(anyData)
-            dbObj.saveData(anyData, 'spotdata')
+            # dbObj.saveData(anyData, 'spotdata')
 
             # Log (start)
-            print("\n---------------------------")
-            print(f"save past data {pastDays} done")
-            pastDays += 1
-            print("---------------------------\n")
+            # print("\n---------------------------")
+            # print(f"save past data {pastDays} done")
+            # pastDays += 1
+            # print("---------------------------\n")
             # Log (end)
 
         """ Today Data """
-        todayData = obj.dayData()
-        print(todayData)
-        dbObj.saveData(todayData, 'spotdata')
+        # todayData = obj.dayData()
+        # print(todayData)
+        # dbObj.saveData(todayData, 'spotdata')
 
         # Log (start)
-        print("\n---------------------------")
-        print("save today data done")
-        print("---------------------------\n")
+        # print("\n---------------------------")
+        # print("save today data done")
+        # print("---------------------------\n")
         # Log (end)
 
         """ last time of todayData"""
-        timeObj = Calculate_time()
-        lastData_dayData = obj.lastData_dayData(todayData)
-        lastData_dayData_show = timeObj.convert_second_to_utc_time(obj.lastData_dayData(todayData))
-        print("\n---------------------------")
-        print(f"\nlast today data is : {lastData_dayData_show}\n")
-        print("---------------------------\n")
+        # timeObj = Calculate_time()
+        # lastData_dayData = obj.lastData_dayData(todayData)
+        # lastData_dayData_show = timeObj.convert_second_to_utc_time(obj.lastData_dayData(todayData))
+        # print("\n---------------------------")
+        # print(f"\nlast today data is : {lastData_dayData_show}\n")
+        # print("---------------------------\n")
 
         """ now Data """
-        nowData = obj.nowData(lastData_dayData)
-        print(nowData)
-        dbObj.saveData(nowData, 'spotdata')
+        # nowData = obj.nowData(lastData_dayData)
+        # print(nowData)
+        # dbObj.saveData(nowData, 'spotdata')
 
         # Log (start)
-        print("\n---------------------------")
-        print("save now data done")
-        print("---------------------------\n")
+        # print("\n---------------------------")
+        # print("save now data done")
+        # print("---------------------------\n")
         # Log (end)
 
         """ Next Data """
 
         # Log (start)
-        print("\n---------------------------")
-        print("start to get next data")
-        print("---------------------------\n")
+        # print("\n---------------------------")
+        # print("start to get next data")
+        # print("---------------------------\n")
         # Log (end)
 
-        nextData = obj.nextData(lastData_dayData)
-        for anyItem in nextData:
-            print(anyItem)
-            dbObj.saveData(anyItem, 'spotdata')
+        # nextData = obj.nextData(lastData_dayData)
+        # for anyItem in nextData:
+        #     print(anyItem)
+        #     dbObj.saveData(anyItem, 'spotdata')
 
 
 
@@ -567,6 +567,7 @@ class GetData:
 
 objGetData = GetData("BTC-USDT")
 objGetData.main()
+
 
 
 

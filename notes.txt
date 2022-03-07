@@ -1,8 +1,7 @@
 alpha
  --------------------------------
 
-. what is module in python ? 
-. solve module import in kucoin tables
+
 . clean log and create setting
 
 
@@ -86,3 +85,5 @@ Done
     2 - if data not in set then save to database
     3 - else : print (" this id is duplicated in database ")
  . fix bug getData
+ . what is module in python ?
+. solve module import in kucoin tables

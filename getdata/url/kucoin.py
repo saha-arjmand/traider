@@ -1,8 +1,8 @@
 
-class CreateUrl:
+class KucoinUrl:
 
     @staticmethod
-    def URL(lastTime, firstTime, symbol, TimeFrame):
+    def spot_url(lastTime, firstTime, symbol, TimeFrame):
 
         # URL for CandleStick Kucoin API
         url = f"https://api.kucoin.com/api/v1/market/candles?symbol=" \

@@ -1,6 +1,6 @@
 import datetime
 from traider.utils.time.time import Calculate_time
-from traider.getdata.url.kucoin import CreateUrl
+from traider.getdata.url.kucoin import KucoinUrl
 from traider.database import database
 import requests
 import pandas as pd
@@ -57,7 +57,7 @@ class GetData:
 
         # Create Objects from our classes
         # url object: Create and use Url
-        urlObj = CreateUrl()
+        urlObj = KucoinUrl()
         # time object: for calculate time
         timeObj = Calculate_time()
 
@@ -65,12 +65,12 @@ class GetData:
             number_of_candles = self.number_of_candles
             lastTime = Calculate_time.lastTime
             firstTime = Calculate_time.firstTime - (number_of_candles - 1) * 60
-            url = urlObj.URL(lastTime, firstTime, symbol, self.timeFrame)
+            url = urlObj.spot_url(lastTime, firstTime, symbol, self.timeFrame)
         else:
             firstTime = self.firstTime
             lastTime = self.lastTime
             # use from urlObj to create url
-            url = urlObj.URL(lastTime, firstTime, symbol, self.timeFrame)
+            url = urlObj.spot_url(lastTime, firstTime, symbol, self.timeFrame)
 
         # Log (start)
         print(f"this getData firs time : {timeObj.convert_second_to_utc_time(firstTime)}")
@@ -544,22 +544,12 @@ class GetData:
             print(anyItem)
             dbObj.saveData(anyItem, obj.tableName)
 
-
-
-
 '''
 ###########################_Run_Area_###########################
 '''
 
 objGetData = GetData("BTC-USDT", 'kucoin', 'spot', '1min')
 objGetData.main()
-
-
-
-
-
-
-
 
 
 

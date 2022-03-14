@@ -2,6 +2,10 @@ alpha
  --------------------------------
 
 . wright test for project
+. create on/off button for log
+. save log to log.txt
+
+
 . Create 5 minutes data function
 . Create 15 minutes data function
 . Create 30 minutes data function

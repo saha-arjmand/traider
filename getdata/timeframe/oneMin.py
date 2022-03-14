@@ -549,7 +549,12 @@ class GetData:
 '''
 
 objGetData = GetData("BTC-USDT", 'kucoin', 'spot', '1min')
-objGetData.main()
+test = objGetData.getData()
+
+if type(test) is list:
+    print("yes")
+else:
+    print("No")
 
 
 
